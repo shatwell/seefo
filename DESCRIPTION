@@ -1,0 +1,24 @@
+Package: seefo
+Title: Useful Tools for The Lake Research Department at UFZ
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Tom",
+           family = "Shatwell",
+           role = c("aut", "cre"),
+           email = "tom.shatwell@ufz.de",
+           comment = c(ORCID = "0000-0002-4520-7916"))
+Maintainer: Tom Shatwell <tom.shatwell@ufz.de>
+Description: A collection of useful tools for lake research
+License: GPL (>= 3)
+Depends: R (>= 3.5)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+    data.table,
+    plot3D
+Suggests: 
+    MASS,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
