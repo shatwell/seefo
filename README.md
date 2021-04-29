@@ -8,11 +8,11 @@ The seefo package is a collection of useful functions and tools for common tasks
 
 ## Installation
 
-You can install the released version of seefo from [CRAN](https://CRAN.R-project.org) with:
+You can install the latest version of seefo from [gitlab](https://git.ufz.de/shatwell/seefo) with:
 
 ``` r
-devtools::install_git("")
-# install.packages("seefo")
+# install.packages("devtools")
+devtools::install_gitlab("https://git.ufz.de/shatwell/seefo.git")
 ```
 
 ## Example
