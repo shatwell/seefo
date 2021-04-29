@@ -19,21 +19,30 @@ strat_phenology(
 
 \item{Tb}{Bottom temperature (numeric vector with same length as \code{Ts}.}
 
-\item{H_ice}{Ice thickness as numeric vector of the same length as \code{Ts}. \code{NULL} if ice statistics should not be calculated.}
+\item{H_ice}{Ice thickness as numeric vector of the same length as \code{Ts}.
+\code{NULL} if ice statistics should not be calculated.}
 
-\item{dates}{The dates corresponding to the temperature measurements in POSIX style and same length as \code{Ts}.}
+\item{dates}{The dates corresponding to the temperature measurements
+in POSIX style and same length as \code{Ts}.}
 
-\item{thresh}{The density or temperature threshold used to define the presence of stratification, ie whether the difference between Ts and Tb exceeds this threshold. If \code{bydensity} is \code{TRUE}, then \code{thresh} must be in (kg m^-3), and \code{Ts} and \code{Tb} must be in Celsius.}
+\item{thresh}{The density or temperature threshold used to define the
+presence of stratification, ie whether the difference between Ts and Tb
+exceeds this threshold. If \code{bydensity} is \code{TRUE}, then \code{thresh} must
+be in (kg m^-3), and \code{Ts} and \code{Tb} must be in Celsius.}
 
 \item{NH}{Is the lake in the northern hemisphere? (logical)}
 
-\item{bydensity}{Should \code{thresh} be defined as a density threshold (logical)? If \code{FALSE}, a temperature threshold is assumed. If \code{TRUE}, then \code{Ts} and \code{Tb} must be in degrees Celsius}
+\item{bydensity}{Should \code{thresh} be defined as a density
+threshold (logical)?
+If \code{FALSE}, a temperature threshold is assumed.
+If \code{TRUE}, then \code{Ts} and \code{Tb} must be in degrees Celsius}
 }
 \value{
 A \code{data.frame} containing the stratification phenology
 }
 \description{
-Calculates seasonal stratification phenology including annual mean,
+Calculates seasonal stratification phenology
+including annual mean,
 max and total duration of summer stratification and ice cover.
 }
 \details{
