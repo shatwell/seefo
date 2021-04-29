@@ -15,11 +15,11 @@ read_bbe(
 \arguments{
 \item{filename}{Name of the file to read, including the file extension}
 
-\item{keep}{names of the columns to retain in the output. Defaults to `"all"``}
+\item{keep}{names of the columns to retain in the output. Defaults to \code{"all"}}
 
 \item{clean}{Should the profile be cleaned? (logical)}
 
-\item{TZ}{time zone given to the output datetimes, defaults to `"UTC"`` (recommended)}
+\item{TZ}{time zone given to the output datetimes, defaults to \code{"UTC"} (recommended)}
 }
 \value{
 A \code{data.frame} containing the profile data

@@ -4,14 +4,16 @@
 \alias{read_ixx}
 \title{Reads profile data from raw output file from a CTD of type ixxx}
 \usage{
-read_ixx(filename, keep = c("depth"), TZ = "UTC")
+read_ixx(filename, keep = "all", clean = TRUE, TZ = "UTC")
 }
 \arguments{
 \item{filename}{Name of the file to read, including the file extension}
 
-\item{keep}{names of the columns to retain in the output. Defaults to `"all"``}
+\item{keep}{names of the columns to retain in the output. Defaults to \code{"all"}}
 
-\item{TZ}{time zone given to the output datetimes, defaults to `"UTC"`` (recommended)}
+\item{clean}{Should the profile be cleaned? (logical)}
+
+\item{TZ}{time zone given to the output datetimes, defaults to \code{"UTC"}(recommended)}
 }
 \value{
 A \code{data.frame} containing the profile data
@@ -32,7 +34,7 @@ If \code{keep} contains names not found in the header, it will add a column of \
 }
 \examples{
 \dontrun{
-bbe <- read_bbe(Ts = df[,2], Tb = df[,ncol(df)], dates = df[,1])
+ixx <- read_ixx(add_later, ...)
 }
 
 }

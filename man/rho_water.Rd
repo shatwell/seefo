@@ -16,7 +16,7 @@ numeric vector the same length as \code{t}
 Calculates the density of fresh water.
 }
 \details{
-Calculates the density from temperature \link{kg m^-3} using the formula of Millero & Poisson (1981).
+Calculates the density from temperature (kg m^-3) using the formula of Millero & Poisson (1981).
 this is the method stated in the isimip 2b protocol in July 2019
 }
 \examples{

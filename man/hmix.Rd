@@ -19,8 +19,11 @@ Fast calculation of the upper thermocline boundary
 }
 \details{
 Calculates mixed layer depths as the depth of the maximum temperature gradient (dT/dz).
-Designed to be as fast as possible for large data sets, so doesn't do any checks at all, so be careful.
-#' Choose the right vertical resolution in the temperatures to ensure a more robust result.
+Designed to be as fast as possible for large data sets. It doesn't do any checks at all,
+and only works with regular data, so be careful.
+Choose the right vertical resolution in the temperatures to ensure a more robust result.
+Use the rLakeAnalyzer functions for more robust solutions which are
+orders of magnitude slower.
 }
 \examples{
 \dontrun{

@@ -7,7 +7,8 @@
 ice_phenology(H_ice, dates, NH = TRUE)
 }
 \arguments{
-\item{H_ice}{A vector indicating the presence of ice cover. Can be numerical or logical where \code{TRUE} or any number > \code{0} (e.g. ice thickness, indicates ice.
+\item{H_ice}{A vector indicating the presence of ice cover.
+Can be numerical or logical where \code{TRUE} or any number > \code{0} (e.g. ice thickness) indicates ice, and
 \code{FALSE} or \code{0} indicates no ice cover.}
 
 \item{dates}{The dates corresponding to the ice observations in POSIX style and same length as \code{H_ice}.}

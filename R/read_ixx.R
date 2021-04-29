@@ -35,7 +35,7 @@ read_ixx <- function(filename, keep = "all", clean=TRUE,
                      TZ="UTC") {
   info <- get_profile_info(filename) # extracts info from the filename
   ext <- info["ext"] # sonde name comes from the file extension
-  if(!grepl(pattern = "i[*0-9]", x = sonde)) {
+  if(!grepl(pattern = "i[*0-9]", x = ext)) {
     warning("File does not have ixxx extension, attempting anyway...")
   }
   # top <- readLines(con = filename,n=2) # read the top 50 lines of the file

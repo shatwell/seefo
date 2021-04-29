@@ -3,7 +3,8 @@
 #' @description Calculates seasonal ice phenology including annual mean,
 #' max and total duration of ice cover.
 #'
-#' @param H_ice A vector indicating the presence of ice cover. Can be numerical or logical where `TRUE` or any number > `0` (e.g. ice thickness, indicates ice.
+#' @param H_ice A vector indicating the presence of ice cover.
+#' Can be numerical or logical where `TRUE` or any number > `0` (e.g. ice thickness) indicates ice, and
 #' `FALSE` or `0` indicates no ice cover.
 #' @param dates The dates corresponding to the ice observations in POSIX style and same length as `H_ice`.
 #' @param NH Is the lake in the northern hemisphere? (logical)

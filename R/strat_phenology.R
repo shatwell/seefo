@@ -7,7 +7,7 @@
 #' @param Tb Bottom temperature (numeric vector with same length as `Ts`.
 #' @param H_ice Ice thickness as numeric vector of the same length as `Ts`. `NULL` if ice statistics should not be calculated.
 #' @param dates The dates corresponding to the temperature measurements in POSIX style and same length as `Ts`.
-#' @param thresh The density or temperature threshold used to define the presence of stratification, ie whether the difference between Ts and Tb exceeds this threshold. If `bydensity` is `TRUE`, then `thresh` must be in [kg m^-3], and `Ts` and `Tb` must be in Celsius.
+#' @param thresh The density or temperature threshold used to define the presence of stratification, ie whether the difference between Ts and Tb exceeds this threshold. If `bydensity` is `TRUE`, then `thresh` must be in (kg m^-3), and `Ts` and `Tb` must be in Celsius.
 #' @param NH Is the lake in the northern hemisphere? (logical)
 #' @param bydensity Should `thresh` be defined as a density threshold (logical)? If `FALSE`, a temperature threshold is assumed. If `TRUE`, then `Ts` and `Tb` must be in degrees Celsius
 #'

@@ -23,7 +23,7 @@ strat_phenology(
 
 \item{dates}{The dates corresponding to the temperature measurements in POSIX style and same length as \code{Ts}.}
 
-\item{thresh}{The density or temperature threshold used to define the presence of stratification, ie whether the difference between Ts and Tb exceeds this threshold. If \code{bydensity} is \code{TRUE}, then \code{thresh} must be in \link{kg m^-3}, and \code{Ts} and \code{Tb} must be in Celsius.}
+\item{thresh}{The density or temperature threshold used to define the presence of stratification, ie whether the difference between Ts and Tb exceeds this threshold. If \code{bydensity} is \code{TRUE}, then \code{thresh} must be in (kg m^-3), and \code{Ts} and \code{Tb} must be in Celsius.}
 
 \item{NH}{Is the lake in the northern hemisphere? (logical)}
 

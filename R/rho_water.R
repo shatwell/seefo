@@ -5,7 +5,7 @@
 #' @param t Temperature in degrees Celsius (numeric)
 #'
 #' @details
-#' Calculates the density from temperature [kg m^-3] using the formula of Millero & Poisson (1981).
+#' Calculates the density from temperature (kg m^-3) using the formula of Millero & Poisson (1981).
 #' this is the method stated in the isimip 2b protocol in July 2019
 #'
 #' @return numeric vector the same length as `t`
