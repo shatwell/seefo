@@ -8,7 +8,7 @@ Authors@R:
            email = "tom.shatwell@ufz.de",
            comment = c(ORCID = "0000-0002-4520-7916"))
 Maintainer: Tom Shatwell <tom.shatwell@ufz.de>
-Description: A collection of useful tools for lake research
+Description: A collection of useful tools for lake research. These tools include: calculating ice and stratification phenology, reading raw data files from sondes (\code{\link{batch_read}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}, \code{\link{read_ixx}}), calculating water density and leap years, calculating volume-weighted mean using hyspographic information, interpolating to fixed depth grids or daily values.
 License: GPL (>= 3)
 Depends: R (>= 3.5)
 Encoding: UTF-8

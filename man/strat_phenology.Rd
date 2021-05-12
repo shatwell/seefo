@@ -46,7 +46,45 @@ including annual mean,
 max and total duration of summer stratification and ice cover.
 }
 \details{
-To be added later.
+These stratification phenology statistics are calculated:
+\code{MaxStratDur} is the duration of the longest uninterupted stratification period,
+\code{TotalStratDur} is the sum of all stratified days per year.
+\code{MeanStratDur} is the average duration when more than one stratification
+period per year exists.
+\code{StratStart} and \code{StratEnd} are the day of the year (Jan 1 = day 0) when
+the longest uninterupted stratification period begins and ends.
+\code{StratFirst} and \code{StratLast} are the day of year for the earliest and latest
+stratified days in the annual season.
+Ice phenology is also calculated if \code{H_ice} is provided. The definitions of
+the ice cover periods are analogous to those for stratification.
+
+The function determines that stratification exists when the difference
+between surface (\code{Ts}) and bottom temperature (\code{Tb}) exceeds a
+certain threshold (\code{thresh}). This can be defined either in terms of a
+temperature difference or a density difference (\code{bydensity = TRUE}).
+Density is calculated from temperature, using the formula
+of Millero & Poisson (1981) for freshwater. Only summer (positive) stratification
+is considered and winter (inverse) stratification is ignored because it is usually
+transient and from experience is not easy to calculate reliably
+(ice is perhaps a better proxy). You should choose the
+depths of \code{Ts} and \code{Tb} to be representative for how you want to calculate
+the stratification duration. It is important that daily values of
+\code{Ts} and \code{Tb} are supplied, so you may need to interpolate if the
+data resolution is lower than daily. I am planning on improving this
+sometime in the future. Ice cover is inferred when \code{H_ice} is not zero,
+so you can supply an ice thickness or simply \code{TRUE} or \code{FALSE} or \code{0} or \code{1}.
+
+The function defines the "summer" stratification season as 1 Jan to 31 Dec for
+northern hemisphere lakes (\code{NH = TRUE}) and from 2 July until 1 July in the
+following year for southern hemisphere lakes (\code{NH = FALSE}). Every stratification
+period is assigned to the year of the season in which it began.
+For instance, if a northern hemisphere lake stratifies in April 2015 and remains stratified
+until January 2016, then it will be assigned to 2015, and the \code{StratEnd} will be the
+day of year counting from 1 Jan 2015, so that statistics are still valid and
+\code{MaxStratDur = StratEnd - StratStart}, even if stratification periods extend into
+seasons of subsequent years. The same rules apply for ice cover, but the "winter" ice
+season is defined as 2 July - 1 July in the northern hemisphere and 1 Jan - 31 Dec
+in the southern hemisphere.
 }
 \examples{
 \dontrun{

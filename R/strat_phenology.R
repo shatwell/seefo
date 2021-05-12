@@ -4,8 +4,8 @@
 #' including annual mean,
 #' max and total duration of summer stratification and ice cover.
 #'
-#' @param Ts Surface temperature (numeric vector).
-#' @param Tb Bottom temperature (numeric vector with same length as `Ts`.
+#' @param Ts Surface temperature, as daily values (numeric vector).
+#' @param Tb Bottom temperature, as daily values (numeric vector with same length as `Ts`.
 #' @param H_ice Ice thickness as numeric vector of the same length as `Ts`.
 #' `NULL` if ice statistics should not be calculated.
 #' @param dates The dates corresponding to the temperature measurements
@@ -21,7 +21,46 @@
 #' If `TRUE`, then `Ts` and `Tb` must be in degrees Celsius
 #'
 #' @details
-#' To be added later.
+#' These stratification phenology statistics are calculated:
+#' `MaxStratDur` is the duration of the longest uninterupted stratification period,
+#' `TotalStratDur` is the sum of all stratified days per year.
+#' `MeanStratDur` is the average duration when more than one stratification
+#' period per year exists.
+#' `StratStart` and `StratEnd` are the day of the year (Jan 1 = day 0) when
+#' the longest uninterupted stratification period begins and ends.
+#' `StratFirst` and `StratLast` are the day of year for the earliest and latest
+#' stratified days in the annual season.
+#' Ice phenology is also calculated if `H_ice` is provided. The definitions of
+#' the ice cover periods are analogous to those for stratification.
+#'
+#' The function determines that stratification exists when the difference
+#' between surface (`Ts`) and bottom temperature (`Tb`) exceeds a
+#' certain threshold (`thresh`). This can be defined either in terms of a
+#' temperature difference or a density difference (`bydensity = TRUE`).
+#' Commonly used thresholds are 1 degree Celsius or 0.1 kg/m2.
+#' Density is calculated from temperature, using the formula
+#' of Millero & Poisson (1981) for freshwater. Only summer (positive) stratification
+#' is considered and winter (inverse) stratification is ignored because it is usually
+#' transient and from experience is not easy to calculate reliably
+#' (ice is perhaps a better proxy). You should choose the
+#' depths of `Ts` and `Tb` to be representative for how you want to calculate
+#' the stratification duration. It is important that daily values of
+#' `Ts` and `Tb` are supplied, so you may need to interpolate if the
+#' data resolution is lower than daily. I am planning on improving this
+#' sometime in the future. Ice cover is inferred when `H_ice` is not zero,
+#' so you can supply an ice thickness or simply `TRUE` or `FALSE` or `0` or `1`.
+#'
+#' The function defines the "summer" stratification season as 1 Jan to 31 Dec for
+#' northern hemisphere lakes (`NH = TRUE`) and from 2 July until 1 July in the
+#' following year for southern hemisphere lakes (`NH = FALSE`). Every stratification
+#' period is assigned to the year of the season in which it began.
+#' For instance, if a northern hemisphere lake stratifies in April 2015 and remains stratified
+#' until January 2016, then it will be assigned to 2015, and the `StratEnd` will be the
+#' day of year counting from 1 Jan 2015, so that statistics are still valid and
+#' `MaxStratDur = StratEnd - StratStart`, even if stratification periods extend into
+#' seasons of subsequent years. The same rules apply for ice cover, but the "winter" ice
+#' season is defined as 2 July - 1 July in the northern hemisphere and 1 Jan - 31 Dec
+#' in the southern hemisphere.
 #'
 #' @return A `data.frame` containing the stratification phenology
 #'
@@ -35,30 +74,10 @@
 #'
 #' @export
 
-
-
-
 # stratification statistics -----------------------------------------------
 
-
-# this function returns stratification statstics: annual mean,
-# max and total
-# length of summer, winter stratification and ice duration.
-# NOTE: summer strat periods are allocated to the year in which the period
-# starts. Winter stratification and ice periods are allocated to the year
-# in which they end.
-# res: (not used - data.frame containing simulation results
-# (req Ts, Tb, H_ice))
-# Ts, Tb: time series of surface and bottom temperatures
-# H_ice: ice thickness time series, set to NULL if analysis not required
-# dates: POSIX style date vector corresponding to rows of Ts and Tb.
-# not used: dT: temperature difference between top and bottom indicating
-# stratification.
-# drho: density difference between top and bottom indicating
-# stratificaiton [kg m^-3]
-# NH: northern hemisphere? TRUE or FALSE
-strat_phenology <- function(Ts, Tb, H_ice=NULL, dates, thresh=0.1,
-                            NH=TRUE, bydensity = TRUE) {
+strat_phenology <- function(Ts, Tb, H_ice=NULL, dates, thresh=1,
+                            NH=TRUE, bydensity = FALSE) {
   the_years <- as.POSIXlt(dates)$year+1900
   yrs <- unique(the_years)
   doys <- as.POSIXlt(dates)$yday # day of the year [0..364]
