@@ -10,6 +10,7 @@
 #' @param thresh The threshold for the difference between top and bottom temperature to infer stratification.
 #' @param therm.dz Representative thickness of the thermocline layer. 1 m works well from experience.
 #' @param min.hmix I can't really remember what this is for.
+#' @param var Which metric should be returned? One of `"hmix"`, `"htherm"`, `"both"` for mixed layer depth, thermocline depth, or both, respectively.
 #' @param min.gradient Not used.
 #' @param ... Arguments passed to `plot()`, when `plot=TRUE`.
 #'
@@ -55,7 +56,7 @@
 
 
 h3mix <- function(T, z, plot=FALSE, thresh = 1,
-                  therm.dz = 1, min.hmix = 1.5, min.gradient = 0.3, ...) {
+                  therm.dz = 1, min.hmix = 1.5, var="hmix", min.gradient = 0.3, ...) {
   if(sum(!is.na(T))>3) {
     dTdz <- diff(T) / diff(z)
     d2Tdz2 <- diff(T,1,2) / diff(z,2)^2
@@ -123,8 +124,16 @@ h3mix <- function(T, z, plot=FALSE, thresh = 1,
     h <- NA
     warning("Warning:need more than 3 temperature values")
   }
-  out <- c(h, mean(z[c(i1,i1+1)]))
-  names(out) <- c("hmix","htherm")
+  if(var=="hmix") {
+    out <- as.numeric(h)
+  } else if(var=="htherm") {
+    out <- mean(z[c(i1,i1+1)])
+  } else if(var=="both") {
+    out <- c(h, mean(z[c(i1,i1+1)]))
+    names(out) <- c("hmix","htherm")
+  } else {
+    stop("var must be one of 'hmix','htherm','both'")
+  }
   return(out)
 }
 

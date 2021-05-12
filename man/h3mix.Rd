@@ -11,26 +11,29 @@ h3mix(
   thresh = 1,
   therm.dz = 1,
   min.hmix = 1.5,
+  var = "hmix",
   min.gradient = 0.3,
   ...
 )
 }
 \arguments{
-\item{T}{Temperature profile}
+\item{T}{Temperature profile as numeric vector.}
 
-\item{z}{The depths corresponding to the temperature profile}
+\item{z}{The depths corresponding to the temperature profile, as a numeric vector.}
 
-\item{plot}{Should a plot of the profile showing the estimates be shown? (logical)}
+\item{plot}{Should a plot of the profile showing the estimates be shown? (logical).}
 
-\item{thresh}{The threshold for the difference between top and bottom temperature to infer stratification}
+\item{thresh}{The threshold for the difference between top and bottom temperature to infer stratification.}
 
 \item{therm.dz}{Representative thickness of the thermocline layer. 1 m works well from experience.}
 
 \item{min.hmix}{I can't really remember what this is for.}
 
-\item{min.gradient}{Not used}
+\item{var}{Which metric should be returned? One of \code{"hmix"}, \code{"htherm"}, \code{"both"} for mixed layer depth, thermocline depth, or both, respectively.}
 
-\item{...}{Arguments passed to \code{plot()}, when \code{plot=TRUE}}
+\item{min.gradient}{Not used.}
+
+\item{...}{Arguments passed to \code{plot()}, when \code{plot=TRUE}.}
 }
 \value{
 A vector of length 2 with the mixed layer depth \code{hmix} and the thermocline depth \code{htherm}
@@ -42,8 +45,8 @@ temperature data.
 }
 \details{
 This function estimates the mixed depth and the thermocline depth.
-It uses regressions to locate the kink in the profile at the bottom of
-the mixed layer as the mixed layer, and the maximum gradient as the thermocline.
+It uses regressions to locate the depth of the kink in the temperature profile
+as the mixed layer depth, and the maximum gradient as the thermocline.
 It is better suited to irregular, esp manually measured profile data.
 It first finds the minimum curvature in the
 profile (maximum for winter stratification) as the initial guess of the
@@ -51,8 +54,9 @@ border of the surface mixed
 layer. Then it finds the thermocline as the depth of maximum T-gradient. It
 estimates the mixed layer depth as the depth where the regression line through
 the surface layer temperatures intersects with the regression line through the
-thermocline temperatures. It performs some other checks, like whether
-stratification exists surface-bottom temperature difference > \code{thresh}, and whether the thermocline
+thermocline temperatures, extended by a window of thickness \code{therm.dz}. It performs some other checks, like whether
+stratification exists according to whether the surface-bottom temperature difference > \code{thresh},
+and whether the thermocline
 is above the surface layer, or whether the lake is completely isothermal and
 there is no intersection (and returns \code{NA}). If mixed, it assumes the mixed
 layer depth is the maximum depth. It also plots the profile if desired
