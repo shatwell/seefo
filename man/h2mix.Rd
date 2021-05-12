@@ -34,7 +34,7 @@ h2mix(T,z)
 
 }
 \seealso{
-\code{\link{hmix}},  \code{\link{delta_rho}}
+\code{\link{hmix}},  \code{\link{h3mix}}, \code{\link{delta_rho}}
 }
 \author{
 Georgiy Kirillin and Tom Shatwell

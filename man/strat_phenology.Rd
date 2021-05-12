@@ -9,15 +9,15 @@ strat_phenology(
   Tb,
   H_ice = NULL,
   dates,
-  thresh = 0.1,
+  thresh = 1,
   NH = TRUE,
-  bydensity = TRUE
+  bydensity = FALSE
 )
 }
 \arguments{
-\item{Ts}{Surface temperature (numeric vector).}
+\item{Ts}{Surface temperature, as daily values (numeric vector).}
 
-\item{Tb}{Bottom temperature (numeric vector with same length as \code{Ts}.}
+\item{Tb}{Bottom temperature, as daily values (numeric vector with same length as \code{Ts}.}
 
 \item{H_ice}{Ice thickness as numeric vector of the same length as \code{Ts}.
 \code{NULL} if ice statistics should not be calculated.}
@@ -62,6 +62,7 @@ The function determines that stratification exists when the difference
 between surface (\code{Ts}) and bottom temperature (\code{Tb}) exceeds a
 certain threshold (\code{thresh}). This can be defined either in terms of a
 temperature difference or a density difference (\code{bydensity = TRUE}).
+Commonly used thresholds are 1 degree Celsius or 0.1 kg/m2.
 Density is calculated from temperature, using the formula
 of Millero & Poisson (1981) for freshwater. Only summer (positive) stratification
 is considered and winter (inverse) stratification is ignored because it is usually

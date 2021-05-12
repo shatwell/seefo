@@ -17,7 +17,7 @@
 #'
 #' @author Georgiy Kirillin and Tom Shatwell
 #'
-#' @seealso \code{\link{h2mix}},  \code{\link{delta_rho}}
+#' @seealso \code{\link{h2mix}},  \code{\link{h3mix}},  \code{\link{delta_rho}}
 #'
 #' @examples
 #' \dontrun{

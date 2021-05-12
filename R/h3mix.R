@@ -4,19 +4,19 @@
 #' more suited for manual or irregular
 #' temperature data.
 #'
-#' @param T Temperature profile
-#' @param z The depths corresponding to the temperature profile
-#' @param plot Should a plot of the profile showing the estimates be shown? (logical)
-#' @param thresh The threshold for the difference between top and bottom temperature to infer stratification
+#' @param T Temperature profile as numeric vector.
+#' @param z The depths corresponding to the temperature profile, as a numeric vector.
+#' @param plot Should a plot of the profile showing the estimates be shown? (logical).
+#' @param thresh The threshold for the difference between top and bottom temperature to infer stratification.
 #' @param therm.dz Representative thickness of the thermocline layer. 1 m works well from experience.
 #' @param min.hmix I can't really remember what this is for.
-#' @param min.gradient Not used
-#' @param ... Arguments passed to `plot()`, when `plot=TRUE`
+#' @param min.gradient Not used.
+#' @param ... Arguments passed to `plot()`, when `plot=TRUE`.
 #'
 #' @details
 #' This function estimates the mixed depth and the thermocline depth.
-#' It uses regressions to locate the kink in the profile at the bottom of
-#' the mixed layer as the mixed layer, and the maximum gradient as the thermocline.
+#' It uses regressions to locate the depth of the kink in the temperature profile
+#' as the mixed layer depth, and the maximum gradient as the thermocline.
 #' It is better suited to irregular, esp manually measured profile data.
 #' It first finds the minimum curvature in the
 #' profile (maximum for winter stratification) as the initial guess of the
@@ -24,8 +24,9 @@
 #' layer. Then it finds the thermocline as the depth of maximum T-gradient. It
 #' estimates the mixed layer depth as the depth where the regression line through
 #' the surface layer temperatures intersects with the regression line through the
-#' thermocline temperatures. It performs some other checks, like whether
-#' stratification exists surface-bottom temperature difference > `thresh`, and whether the thermocline
+#' thermocline temperatures, extended by a window of thickness `therm.dz`. It performs some other checks, like whether
+#' stratification exists according to whether the surface-bottom temperature difference > `thresh`,
+#' and whether the thermocline
 #' is above the surface layer, or whether the lake is completely isothermal and
 #' there is no intersection (and returns `NA`). If mixed, it assumes the mixed
 #' layer depth is the maximum depth. It also plots the profile if desired
@@ -89,34 +90,34 @@ h3mix <- function(T, z, plot=FALSE, thresh = 1,
                          T = T[z>=z[i1]-therm.dz &
                                  z <= z[i1+1]+therm.dz])
 
-    regs <- lm(T[1:i2]~z[1:i2]) # regression thru surface temps
-    regt <- lm(T~z, thermo) # regression thru thermocline
-    dTdz.s <- coef(regs)[2] # T gradient in surface layer
-    if(is.na(coef(regs)[2])) dTdz.s <- 0
+    regs <- stats::lm(T[1:i2]~z[1:i2]) # regression thru surface temps
+    regt <- stats::lm(T~z, thermo) # regression thru thermocline
+    dTdz.s <- stats::coef(regs)[2] # T gradient in surface layer
+    if(is.na(stats::coef(regs)[2])) dTdz.s <- 0
 
-    h <- (coef(regt)[1] - coef(regs)[1]) / # depth of intersection of thermocline and surface layer regression lines
-      (dTdz.s - coef(regt)[2])
+    h <- (stats::coef(regt)[1] - stats::coef(regs)[1]) / # depth of intersection of thermocline and surface layer regression lines
+      (dTdz.s - stats::coef(regt)[2])
 
     if(!is.na(h) & h > z[i1+1]) h <- NA # ignore if intersection of thermocline and surface layer is below thermocline
     if(i1 < i2) h <- NA # ignore if minimum curvature is below the thermocline
     if(abs(Ts-Tb) < thresh) h <- max(z) # assume mixed to max(z) if Ts-Tb < thresh
     if(!is.na(h) & h < 0) h <- NA
     if(plot){
-      plot(T, z,
+      graphics::plot(T, z,
            ylim=c(max(z),0), type="n", ...)
-      abline(h=0:(max(z)), col="grey")
-      abline(h=h)
+      graphics::abline(h=0:(max(z)), col="grey")
+      graphics::abline(h=h)
       # abline(h=h2, lty=2)
       # if(!c(coef(regs)[2] %in% c(0,NA) | !coef(regt)[2] %in% c(0,NA))) {
       #   abline(-coef(regs)[1]/coef(regs)[2], 1/coef(regs)[2], lty=2, col="red")
       #   abline(-coef(regt)[1]/coef(regt)[2], 1/coef(regt)[2], lty=2, col="blue")
       # }
       # points(coef(regs)[2] * h + coef(regs)[1], h, pch=16, col="blue", cex=1.5)
-      lines(T, z, type="o")
-      lines(T[1:i2], z[1:i2], col="red", lwd=2)
-      lines(T[c(i1,i1+1)], z[c(i1,i1+1)], col="blue", lwd=2)
-      points(T[i2+1], z[i2+1], col="red",pch=16)
-      box()
+      graphics::lines(T, z, type="o")
+      graphics::lines(T[1:i2], z[1:i2], col="red", lwd=2)
+      graphics::lines(T[c(i1,i1+1)], z[c(i1,i1+1)], col="blue", lwd=2)
+      graphics::points(T[i2+1], z[i2+1], col="red",pch=16)
+      graphics::box()
     }
   } else {
     h <- NA
