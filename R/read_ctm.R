@@ -13,7 +13,7 @@
 #' including the sampling location from the beginning of the filename,
 #' and the sonde number from the file extension.
 #' It parses the file and begins to read data 2 lines after the keyword "Datasets".
-#' It assigns the names in `header` to the columns. If `header` is set to `"auto"``,
+#' It assigns the names in `header` to the columns. If `header` is set to `"auto"`,
 #' it will assign hard coded names according to the sonde number, hoping that one sonde always thas the same sensors attached.
 #' It converts the date and time columns to a POSIX datetime with the timezone `TZ`.
 #' The function finally drops any columns that are not named in `keep`.
