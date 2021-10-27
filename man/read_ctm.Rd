@@ -28,7 +28,12 @@ This function first gleans information from the filename using \code{get_profile
 including the sampling location from the beginning of the filename,
 and the sonde number from the file extension.
 It parses the file and begins to read data 2 lines after the keyword "Datasets".
-It assigns the names in \code{header} to the columns. If \code{header} is set to \verb{"auto"``, it will assign hard coded names according to the sonde number, hoping that one sonde always thas the same sensors attached. It converts the date and time columns to a POSIX datetime with the timezone }TZ\verb{. The function finally drops any columns that are not named in }keep\verb{. If }keep\verb{contains names not found in the header, it will add a column of}NA\verb{s for each unfound name. The }header\verb{can include}c("no","press","temp","cond","cond_hi","salin","DO_sat","DO","pH","turb","chla","BGAPE","BGAPC","sv","intD","intT")`
+It assigns the names in \code{header} to the columns. If \code{header} is set to \code{"auto"},
+it will assign hard coded names according to the sonde number, hoping that one sonde always thas the same sensors attached.
+It converts the date and time columns to a POSIX datetime with the timezone \code{TZ}.
+The function finally drops any columns that are not named in \code{keep}.
+If \code{keep} contains names not found in the header, it will add a column of \code{NA}s for each unfound name.
+The \code{header} can include \code{c("no","press","temp","cond","cond_hi","salin","DO_sat","DO","pH","turb","chla","BGAPE","BGAPC","sv","intD","intT")}
 }
 \examples{
 \dontrun{
