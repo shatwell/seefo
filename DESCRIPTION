@@ -10,12 +10,13 @@ Authors@R:
 Maintainer: Tom Shatwell <tom.shatwell@ufz.de>
 Description: A collection of useful tools for lake research. These tools include: calculating ice and stratification phenology, reading raw data files from sondes, calculating water density and leap years, calculating volume-weighted mean using hyspographic information, interpolating to fixed depth grids or daily values.
 License: GPL (>= 3)
-Depends: R (>= 3.5)
+Depends: 
+    R (>= 3.5), 
+    data.table
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Depends: data.table
 Imports:
     plot3D
 Suggests: 
