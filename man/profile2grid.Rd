@@ -4,12 +4,20 @@
 \alias{profile2grid}
 \title{Interpolation of sonde profiles to a grid of fixed depths}
 \usage{
-profile2grid(data, datetime, depth, value, outdepths = NULL, rule = c(2, 1))
+profile2grid(
+  data,
+  datetime,
+  depth,
+  value,
+  outdepths = NULL,
+  rule = c(2, 1),
+  dropNAs = FALSE
+)
 }
 \arguments{
 \item{data}{A data.frame containing the profile data to interpolate, containing columns of at least datetime, depth and values.}
 
-\item{datetime}{The name of the column containing the datetimes (character). Datetimes must be in POSIXct format.}
+\item{datetime}{The name of the column containing the datetimes (character).}
 
 \item{depth}{The name of the column containing the depths (character).}
 
@@ -21,10 +29,12 @@ profile2grid(data, datetime, depth, value, outdepths = NULL, rule = c(2, 1))
 Copied again: an integer (of length 1 or 2) describing how interpolation is to take place outside the interval \link{min(x), max(x)}.
 If rule is 1 then NAs are returned for such points and if it is 2, the value at the closest data extreme is used.
 Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.}
+
+\item{dropNAs}{Should bad profiles be dropped (\code{TRUE}) or retained as NAs (\code{FALSE}) (logical).}
 }
 \value{
 A \code{matrix} containing the interpolated profile data, nrow = the length of outdepths, and ncol=the number of profiles.
-The attributes contain some details including the \code{outdepths}.
+The attributes contain some details including the \code{outdepths} and unique \code{datetimes}.
 }
 \description{
 Interpolates vertical profile data (typically from a sonde or profiling system) to defined depths.
@@ -32,6 +42,10 @@ It uses \code{data.table} to more quickly and efficiently process large datasets
 }
 \details{
 The function takes as input a table in long format, with columns for a timestamp, depth, and measured values.
+The input data is typically data of multiple profiles from a sonde with one measurement in each row.
+Each measurement requires a timestamp (\code{datetime}) that uniquely associates it to a profile.
+In principle the \code{datetime} column could contain anything that uniquely identifies each profile, but this is commonly a timestamp.
+Therefore the times from raw sonde data may need to be \code{cut()} first. Profiles with less than 5 non-NA values are not interpolated.
 }
 \examples{
 \dontrun{
