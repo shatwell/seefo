@@ -29,7 +29,33 @@
 #'
 #' @examples
 #' \dontrun{
-#' out <- profile2grid(...)
+#'
+#' depths <- c(0,2,4,6,8,10, 15, 20)
+#' times <- c("2005-08-20", "2005-09-02", "2005-09-25")
+#'
+#' temps <- c(30.8, 30.5, 30.4, 30.3, 29.7, 28.8, 27.8, 27.3,
+#'   30.5, 30.0, 29.9, 29.7, 29.1, 29.0, 27.7, 27.3,
+#'   30.6, 30.6, 30.5, 30.0, 29.7, 29.2, 27.7, 27.3)
+#'
+#' dat <- data.frame(
+#'   time = rep(times, each=length(depths)),
+#'   depth=rep(depths, length(times)),
+#'   temp=temps)
+#'
+#' out <- profile2grid(data=dat, datetime="time", depth="depth",
+#'   value="temp")
+#'
+#' # set interpolation depths manually
+#' out <- profile2grid(data=dat, datetime="time", depth="depth",
+#'   value="temp", outdepths=seq(0,17,0.5))
+#'
+#' # works also with any identifier instead of a date
+#' dat$time <- rep(c("A","B","C"), each=length(depths))
+#'
+#' out <- profile2grid(data=dat, datetime="time", depth="depth",
+#'   value="temp")
+#'
+#' attributes(out)
 #' }
 #'
 #' @export
@@ -98,7 +124,5 @@ profile2grid <- function(data, datetime, depth, value,
     }
   }
 
-  # return(list(out=matrix(unlist(out),nrow = length(outdepths)),
-  #             dt=dates, depth=outdepths, name=value))
   return(out)
 }
