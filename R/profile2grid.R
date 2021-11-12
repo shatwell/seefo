@@ -56,9 +56,11 @@ profile2grid <- function(data, datetime, depth, value,
     out <- NULL
     tryCatch({
       out <- fn(p, ...)
-    }, warning=function(x) {
-      out <<- as.character(x)
-    }, error=function(x) {
+    },
+    # warning=function(x) {
+    #   out <<- as.character(x)
+    # },
+    error=function(x) {
       out <<- as.character(x)
     })
     return(out)
