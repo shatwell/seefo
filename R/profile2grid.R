@@ -66,7 +66,14 @@ profile2grid <- function(data, datetime, depth, value,
                          outdepths=NULL, rule=c(2,1),
                          dropNAs=FALSE) {
   # require(data.table)
-  dat <- data.table::copy(data[,c(datetime,depth,value)])
+  select_cols <- c(datetime,depth,value)
+  if(data.table::is.data.table(data)) {
+    dat <- data.table::copy(data[,..select_cols])
+  } else if(is.data.frame(data)) {
+    dat <- data.table::copy(data[,select_cols])
+  } else {
+    stop("data must be a data.frame or data.table")
+  }
   names(dat) <- c("dt", "dep", "val")
   data.table::setDT(dat, key = "dt")
   dates <- unique(dat[,dt])
