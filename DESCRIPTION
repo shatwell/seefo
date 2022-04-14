@@ -1,6 +1,6 @@
 Package: seefo
 Title: Useful Tools for The Lake Research Department at UFZ
-Version: 0.0.0.9000
+Version: 0.0.1.0000
 Authors@R: 
     person(given = "Tom",
            family = "Shatwell",
@@ -10,15 +10,12 @@ Authors@R:
 Maintainer: Tom Shatwell <tom.shatwell@ufz.de>
 Description: A collection of useful tools for lake research. These tools include: calculating ice and stratification phenology, reading raw data files from sondes, calculating water density and leap years, calculating volume-weighted mean using hyspographic information, interpolating to fixed depth grids or daily values.
 License: GPL (>= 3)
-Depends: 
-    R (>= 3.5), 
-    data.table
+Depends: R (>= 3.5) 
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
-Imports:
-    plot3D
+RoxygenNote: 7.1.2
+Imports: plot3D, data.table, ncdf4
 Suggests: 
     MASS,
     testthat (>= 3.0.0)
