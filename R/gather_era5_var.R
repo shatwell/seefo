@@ -13,8 +13,9 @@
 #' @param files The filenames to be read (character vector). The default is `"autosearch"`, in which case the files are matched with the patterns in namestrings.
 #' @param recursive Should subfolders also be searched? (logical)
 #' @param radius The radius (numerical vector length 2) in degrees around `[lat,lon]` that will be searched. If discovered coordinates are outside `radius[1]`, a warning is issued, if they are outside `radius[2]`, an error is issued.
+#' @param pad_missings If there are fewer values than hours in the time series, should they be padded with NAs? (logical)
 #'
-#' @details The location and variable name are kept in the attributes of the output.
+#' @details The location and variable name are kept in the attributes of the output. Pad_missings can be useful if a variable can take on missing values, e.g. cloud base height when there is no cloud. Padding missing values can mask problems like discontinuous time series, so choose FALSE if for safety if the value cannot be NA.
 #' @return A data.frame containing the datetime and variable values
 #' @author Tom Shatwell
 #' ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
@@ -28,7 +29,7 @@
 
 gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
                             datapath, files="autosearch", recursive=FALSE,
-                            radius=c(0.5,1)) {
+                            radius=c(0.5,1), pad_missings = TRUE) {
   if(files=="autosearch") {
     files <- list.files(path = datapath, recursive = recursive) # list ncdf files
     for(i in 1:length(namestrings)) {
@@ -99,6 +100,7 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
 
   out <- lapply(X = files, FUN = wrapper, fn = gather_one) # read all files
   retain <- which(sapply(out, isValid)) # which files were successfully read?
+  if(length(retain)==0) stop(print(out))
   out <- data.table::rbindlist(out[retain]) # stack individual tables
   data.table::setkey(out,"dt") # sort chronologically by profile datetime
   out <- as.data.frame(out)
@@ -130,12 +132,22 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
                               out[1,"dt"], units="hour")+1)) {
       warning(paste0("More than one matching file. Duplicate values were averaged.\n",
                      paste(files, collapse=" \n")))
-    } else {
-      stop(paste0("More than one matching file. Any duplicate values were averaged but the time series appears not continuous.\n",
-                  paste(files, collapse=" \n")))
     }
-  }
-  out <- out[,c("dt","val")]
+      if(nrow(out) < (difftime(out[nrow(out),"dt"],
+                               out[1,"dt"], units="hour")+1)) {
+        if(pad_missings) {
+          dt1 <- data.table::setDT(list(dt=seq(out[1,"dt"], out[nrow(out),"dt"], "hour"))) # hourly time sequence
+          data.table::setkey(dt1,"dt")
+          out <- dt1[data.table::setDT(out,key="dt")] # merge results with hour sequence, adding NAs for missings
+          warning(paste0("More than one matching file. Duplicate values were averaged and missings were padded with NAs.\n",
+                         paste(files, collapse=" \n")))
+        } else { # end if pad_missings
+          stop(paste0("More than one matching file. Any duplicate values were averaged but the time series appears not continuous.\n",
+                      paste(files, collapse=" \n")))
+        } # end else stop
+      } # end else if nrow(out) < (difftime...)
+  } # end if(nrow(out) > (difftime...))
+  out <- as.data.frame(out[,c("dt","val")])
   attributes(out) <- c(attributes(out),
                        lat=lat, lon=lon,
                        varid=varid,
