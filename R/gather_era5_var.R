@@ -88,7 +88,8 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
     dat <- ncdf4::ncvar_get(nc, varid, start=start, count=count)
     ncdf4::nc_close(nc)
     if(mindist > radius[2]) {
-      stop(paste("Location is more than", radius[2], "degrees away"))
+      stop(paste("Nearest location is more than",
+                 radius[2], "degrees away"))
     }
     return(data.table::data.table(dt=dt,val=dat,
                                   lon=nearlon,
@@ -106,11 +107,20 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
       paste(files[retain],"\n"))
   if(length(retain) < length(files)) { # print file names that were not successful as warning
     warning(c("Did not read/use the following files:\n",
-              paste(files[!files %in% retain],"\n")))
+              paste(files[!(1:length(files)) %in% retain],"\n")))
   }
 
   nearlats <- unique(out$lat) # latitudes of component data sets
   nearlons <- unique(out$lon) # longitudes of component data sets
+
+  if(any(out$mindist > radius[1])) {
+    warning(paste("At least one location is more than", radius[1], "degrees away.\n"))
+  }
+  if((length(nearlats)+length(nearlons)) > 2) {
+    warning(paste("Coordinates from",
+                  max(c(length(nearlats),length(nearlons))),
+                  "different locations. Component coordinates stored in attributes.\n"))
+  }
 
   if(nrow(out) > (difftime(out[nrow(out),"dt"],
                            out[1,"dt"], units="hour")+1)) {
@@ -125,14 +135,6 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
                   paste(files, collapse=" \n")))
     }
   }
-  if(any(out$mindist > radius[1])) {
-    warning(paste("At least one location is more than", radius[1], "degrees away.\n"))
-  }
-  if((length(nearlats)+length(nearlons)) > 2) {
-    warning(paste("Coordinates from",
-                  max(c(length(nearlats),length(nearlons))),
-                  "different locations. Component coordinates stored in attributes.\n"))
-  }
   out <- out[,c("dt","val")]
   attributes(out) <- c(attributes(out),
                        lat=lat, lon=lon,
@@ -143,4 +145,15 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
   return(out)
 }
 
+the_hydrodynamic_8_long <- c(
+  "mean_surface_downward_short_wave_radiation_flux",
+  "mean_surface_downward_long_wave_radiation_flux", # W m**-2
+  "2m_temperature", # K
+  # "surface_pressure", # Pa
+  "2m_dewpoint_temperature", # K
+  "10m_u_component_of_wind", # m s**-1
+  "10m_v_component_of_wind", # m s**-1
+  "mean_total_precipitation_rate",	# kg m**-2 s**-1
+  "total_cloud_cover", # 0..1
+)
 
