@@ -89,8 +89,7 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
     dat <- ncdf4::ncvar_get(nc, varid, start=start, count=count)
     ncdf4::nc_close(nc)
     if(mindist > radius[2]) {
-      stop(paste("Nearest location is more than",
-                 radius[2], "degrees away"))
+      stop(paste("Nearest location is more than", radius[2], "degrees away"))
     }
     return(data.table::data.table(dt=dt,val=dat,
                                   lon=nearlon,
@@ -133,19 +132,19 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
       warning(paste0("More than one matching file. Duplicate values were averaged.\n",
                      paste(files, collapse=" \n")))
     }
-      if(nrow(out) < (difftime(out[nrow(out),"dt"],
-                               out[1,"dt"], units="hour")+1)) {
-        if(pad_missings) {
-          dt1 <- data.table::setDT(list(dt=seq(out[1,"dt"], out[nrow(out),"dt"], "hour"))) # hourly time sequence
-          data.table::setkey(dt1,"dt")
-          out <- dt1[data.table::setDT(out,key="dt")] # merge results with hour sequence, adding NAs for missings
-          warning(paste0("More than one matching file. Duplicate values were averaged and missings were padded with NAs.\n",
-                         paste(files, collapse=" \n")))
-        } else { # end if pad_missings
-          stop(paste0("More than one matching file. Any duplicate values were averaged but the time series appears not continuous.\n",
-                      paste(files, collapse=" \n")))
-        } # end else stop
-      } # end else if nrow(out) < (difftime...)
+    if(nrow(out) < (difftime(out[nrow(out),"dt"],
+                             out[1,"dt"], units="hour")+1)) {
+      if(pad_missings) {
+        dt1 <- data.table::setDT(list(dt=seq(out[1,"dt"], out[nrow(out),"dt"], "hour"))) # hourly time sequence
+        data.table::setkey(dt1,"dt")
+        out <- dt1[data.table::setDT(out,key="dt")] # merge results with hour sequence, adding NAs for missings
+        warning(paste0("More than one matching file. Duplicate values were averaged and missings were padded with NAs.\n",
+                       paste(files, collapse=" \n")))
+      } else { # end if pad_missings
+        stop(paste0("More than one matching file. Any duplicate values were averaged but the time series appears not continuous.\n",
+                    paste(files, collapse=" \n")))
+      } # end else stop
+    } # end else if nrow(out) < (difftime...)
   } # end if(nrow(out) > (difftime...))
   out <- as.data.frame(out[,c("dt","val")])
   attributes(out) <- c(attributes(out),
@@ -157,15 +156,15 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
   return(out)
 }
 
-the_hydrodynamic_8_long <- c(
-  "mean_surface_downward_short_wave_radiation_flux",
-  "mean_surface_downward_long_wave_radiation_flux", # W m**-2
-  "2m_temperature", # K
-  # "surface_pressure", # Pa
-  "2m_dewpoint_temperature", # K
-  "10m_u_component_of_wind", # m s**-1
-  "10m_v_component_of_wind", # m s**-1
-  "mean_total_precipitation_rate",	# kg m**-2 s**-1
-  "total_cloud_cover", # 0..1
-)
+# the_hydrodynamic_8_long <- c(
+#   "mean_surface_downward_short_wave_radiation_flux",
+#   "mean_surface_downward_long_wave_radiation_flux", # W m**-2
+#   "2m_temperature", # K
+#   # "surface_pressure", # Pa
+#   "2m_dewpoint_temperature", # K
+#   "10m_u_component_of_wind", # m s**-1
+#   "10m_v_component_of_wind", # m s**-1
+#   "mean_total_precipitation_rate",	# kg m**-2 s**-1
+#   "total_cloud_cover", # 0..1
+# )
 
