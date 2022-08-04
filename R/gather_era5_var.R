@@ -6,7 +6,7 @@
 #'
 #'
 #' @param namestrings list of vector containing text fragments to uniquely match the  filenames. Typically it will contain the file extension (".nc$"), variable name (e.g. "2m_temperature", and perhaps a prefix (e.g. "era5"). This is only used if files is "autosearch".
-#' @param varid The name of the variable in the nc file.
+#' @param varid The name of the variable in the nc file. See ERA5 shortname in the table in Details
 #' @param lon Longitude (numerical) of the location to collate data.
 #' @param lat Latitude (numerical) of the location to collate data.
 #' @param datapath The path to the folder in which to search for the files (character)
@@ -16,15 +16,39 @@
 #' @param pad_missings If there are fewer values than hours in the time series, should they be padded with NAs? (logical)
 #'
 #' @details The location and variable name are kept in the attributes of the output. Pad_missings can be useful if a variable can take on missing values, e.g. cloud base height when there is no cloud. Padding missing values can mask problems like discontinuous time series, so choose FALSE if for safety if the value cannot be NA.
+#'
+#' | **ERA5 long name**                                       | **ERA5 shortname** | **Units** |
+#' |----------------------------------------------------------|----------------|-------|
+#' |surface_solar_radiation_downwards                         | ssrd           | ??    |
+#' |surface_solar_radiation_downward_clear_sky                | ssrdc          | ??    |
+#' |mean_surface_downward_short_wave_radiation_flux           | msdwswrf       | ??    |
+#' |mean_surface_downward_short_wave_radiation_flux_clear_sky | msdwswrfcs     | ??    |
+#' |mean_surface_downward_long_wave_radiation_flux            | msdwlwrf       | W/m^2 |
+#' |surface_thermal_radiation_downwards                       | ??             | J/m^2 |
+#' |2m_temperature                                            | t2m            | K     |
+#' |surface_pressure                                          | ??             | Pa    |
+#' |2m_dewpoint_temperature                                   | ??             | K     |
+#' |10m_u_component_of_wind                                   | u10            | m/s   |
+#' |10m_v_component_of_wind                                   | v10            | m/s   |
+#' |mean_total_precipitation_rate                             | ??             |kg m**-2 s**-1|
+#' |total_precipitation                                       | ??             | m     |
+#' |total_cloud_cover                                         | tcc            | -     |
+#' |low_cloud_cover                                           | lcc            | -     |
+#' |medium_cloud_cover                                        | mcc            | -     |
+#' |high_cloud_cover                                          | hcc            | -     |
+#' |cloud_base_height                                         | cbh            | m     |
+#'
 #' @return A data.frame containing the datetime and variable values
 #' @author Tom Shatwell
-#' ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
+#'
 #' @examples
 #' \dontrun{
 #' ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
 #' datapath="../nc_input/era5_north_aral/",
 #' lon=60.25, lat=46.5)
 #' }
+#'
+#'
 #' @export
 
 gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
