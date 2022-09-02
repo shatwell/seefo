@@ -12,13 +12,14 @@ gather_era5_var(
   datapath,
   files = "autosearch",
   recursive = FALSE,
-  radius = c(0.5, 1)
+  radius = c(0.5, 1),
+  pad_missings = TRUE
 )
 }
 \arguments{
 \item{namestrings}{list of vector containing text fragments to uniquely match the  filenames. Typically it will contain the file extension (".nc$"), variable name (e.g. "2m_temperature", and perhaps a prefix (e.g. "era5"). This is only used if files is "autosearch".}
 
-\item{varid}{The name of the variable in the nc file.}
+\item{varid}{The name of the variable in the nc file. See ERA5 shortname in the table in Details}
 
 \item{lon}{Longitude (numerical) of the location to collate data.}
 
@@ -31,6 +32,8 @@ gather_era5_var(
 \item{recursive}{Should subfolders also be searched? (logical)}
 
 \item{radius}{The radius (numerical vector length 2) in degrees around \verb{[lat,lon]} that will be searched. If discovered coordinates are outside \code{radius[1]}, a warning is issued, if they are outside \code{radius[2]}, an error is issued.}
+
+\item{pad_missings}{If there are fewer values than hours in the time series, should they be padded with NAs? (logical)}
 }
 \value{
 A data.frame containing the datetime and variable values
@@ -41,7 +44,27 @@ Typically ERA5 files are downloaded containing 1 variable at several coordinates
 This function will search files that match a variable name string close to a given coordinate, read the data and assemble the variable from these files in chronological order. This tidies up ERA5 data downloads eg from era5cli program.
 }
 \details{
-The location and variable name are kept in the attributes of the output.
+The location and variable name are kept in the attributes of the output. Pad_missings can be useful if a variable can take on missing values, e.g. cloud base height when there is no cloud. Padding missing values can mask problems like discontinuous time series, so choose FALSE if for safety if the value cannot be NA.\tabular{lll}{
+   \strong{ERA5 long name} \tab \strong{ERA5 shortname} \tab \strong{Units} \cr
+   surface_solar_radiation_downwards \tab ssrd \tab ?? \cr
+   surface_solar_radiation_downward_clear_sky \tab ssrdc \tab ?? \cr
+   mean_surface_downward_short_wave_radiation_flux \tab msdwswrf \tab ?? \cr
+   mean_surface_downward_short_wave_radiation_flux_clear_sky \tab msdwswrfcs \tab ?? \cr
+   mean_surface_downward_long_wave_radiation_flux \tab msdwlwrf \tab W/m^2 \cr
+   surface_thermal_radiation_downwards \tab ?? \tab J/m^2 \cr
+   2m_temperature \tab t2m \tab K \cr
+   surface_pressure \tab ?? \tab Pa \cr
+   2m_dewpoint_temperature \tab ?? \tab K \cr
+   10m_u_component_of_wind \tab u10 \tab m/s \cr
+   10m_v_component_of_wind \tab v10 \tab m/s \cr
+   mean_total_precipitation_rate \tab ?? \tab kg m**-2 s**-1 \cr
+   total_precipitation \tab ?? \tab m \cr
+   total_cloud_cover \tab tcc \tab - \cr
+   low_cloud_cover \tab lcc \tab - \cr
+   medium_cloud_cover \tab mcc \tab - \cr
+   high_cloud_cover \tab hcc \tab - \cr
+   cloud_base_height \tab cbh \tab m \cr
+}
 }
 \examples{
 \dontrun{
@@ -49,8 +72,9 @@ ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
 datapath="../nc_input/era5_north_aral/",
 lon=60.25, lat=46.5)
 }
+
+
 }
 \author{
 Tom Shatwell
-ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
 }

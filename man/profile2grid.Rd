@@ -26,7 +26,7 @@ profile2grid(
 \item{outdepths}{The interpolation depths, which defines the desired vertical grid (numeric vector). If \code{NULL}, the function tries to choose suitable depths.}
 
 \item{rule}{The rule defining how to interpolate outside the data range, as defined in the function \code{approxfun()} function.
-Copied again: an integer (of length 1 or 2) describing how interpolation is to take place outside the interval \link{min(x), max(x)}.
+Copied again: an integer (of length 1 or 2) describing how interpolation is to take place outside the interval \verb{[min(x), max(x)]}.
 If rule is 1 then NAs are returned for such points and if it is 2, the value at the closest data extreme is used.
 Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.}
 
