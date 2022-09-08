@@ -28,16 +28,20 @@
 #' @export
 #
 
+## --> TS these should be arguments to the function
 #data provided by the user
 methods <- c("GAM.load", "method2") #here the user can choose 3 out of 3 methods
 start.year = 2000
 end.year = 2017
+## <-- TS
 
 #define 3 functions that do the different calculations
 
+# --> TS: this information should be in the header info above
 #first the GAM. "hydrology" must be a data.frame consisting of times,year, doy, and discharge over
 #the timespan calculations are done. "year", "doy","discharge", "concentration" are vectors with
 #the observed concentrations
+# <-- TS
 load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
   mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
   myGAM <-  mgcv::gam(concentration ~ s(year)+s(doy, bs="cc")+s(discharge), data=mydata)
@@ -88,12 +92,16 @@ load.method2 <- function(hydrology, year, discharge, concentration){
   return(yearly.from.method2)
 }
 
+# --> TS this should be done by the user before calling the function
+# and should be loaded as binary into /data for the example
 #reading and formating the input data
 data <- read.table("data.csv", header=T, sep=",", dec=".")
+# This should be done inside the function
 data <- data[data$year>=start.year & data$year<=end.year,]
 data$date <- lubridate::mdy(data$date)
 data$doy <- lubridate::yday(data$date)
 data$year <- lubridate::year(data$date)
+# <-- TS
 
 my.summary.loads <- data.frame(NULL)
 my.inlets <- levels(as.factor(data$in_outlet))
