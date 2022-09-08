@@ -95,94 +95,102 @@ load.method2 <- function(hydrology, year, discharge, concentration){
 # --> TS this should be done by the user before calling the function
 # and should be loaded as binary into /data for the example
 #reading and formating the input data
-data <- read.table("data.csv", header=T, sep=",", dec=".")
+data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".")
 # This should be done inside the function
 data <- data[data$year>=start.year & data$year<=end.year,]
-data$date <- lubridate::mdy(data$date)
+# data$date <- lubridate::mdy(data$date)
 data$doy <- lubridate::yday(data$date)
 data$year <- lubridate::year(data$date)
 # <-- TS
 
-my.summary.loads <- data.frame(NULL)
-my.inlets <- levels(as.factor(data$in_outlet))
-my.tributaries <- levels(as.factor(data$tributary))
-my.nutrients <- levels(as.factor(data$variable))
-my.nutrients <- my.nutrients[my.nutrients!="Q"]
+# retention_eff <- function(data,method,start.year, end.year) {
+  if(!method%in%c("a","b","c")) {
+    stop("Method must be one of a, b, c")
+  }
+  my.summary.loads <- data.frame(NULL)
+  my.inlets <- levels(as.factor(data$in_outlet))
+  my.tributaries <- levels(as.factor(data$tributary))
+  my.nutrients <- levels(as.factor(data$variable))
+  my.nutrients <- my.nutrients[my.nutrients!="Q"]
 
-for (this.inflow in my.tributaries) {
-  for(this.outlet in my.inlets){
-    for (this.var in my.nutrients) {
-      print(paste(this.inflow,this.var, sep=" & "))
+  for (this.inflow in my.tributaries) {
+    for(this.outlet in my.inlets){
+      for (this.var in my.nutrients) {
+        print(paste(this.inflow,this.var, sep=" & "))
 
-      #select the required data to apply the load calculation methods (indexing)
-      my.Q  <- data[data$tributary==this.inflow & data$variable=="Q" & data$in_outlet==this.outlet,]
+        #select the required data to apply the load calculation methods (indexing)
+        my.Q  <- data[data$tributary==this.inflow & data$variable=="Q" & data$in_outlet==this.outlet,]
 
-      my.cq <- data[data$tributary==this.inflow & data$variable==this.var & data$in_outlet==this.outlet,]
+        my.cq <- data[data$tributary==this.inflow & data$variable==this.var & data$in_outlet==this.outlet,]
 
-      the.result <- data.frame(NULL)
+        the.result <- data.frame(NULL)
 
-      #we have to add the discharge Q to all measurements of the current variable in my.cq
-      my.cq$Q <- my.Q$value[match(my.cq$date,my.Q$date)]
-      if("GAM.load" %in% methods){
-        res.GAM <- load.GAM(hydrology=data.frame(times=my.Q$date,
-                                                 year=my.Q$year,
-                                                 doy=my.Q$doy,
-                                                 discharge=my.Q$value),
-                            year=my.cq$year, doy=my.cq$doy, discharge=my.cq$Q,
-                            concentration=my.cq$value, GOF=T)
-        the.result <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
+        #we have to add the discharge Q to all measurements of the current variable in my.cq
+        my.cq$Q <- my.Q$value[match(my.cq$date,my.Q$date)]
+        if("GAM.load" %in% methods){
+          res.GAM <- load.GAM(hydrology=data.frame(times=my.Q$date,
+                                                   year=my.Q$year,
+                                                   doy=my.Q$doy,
+                                                   discharge=my.Q$value),
+                              year=my.cq$year, doy=my.cq$doy, discharge=my.cq$Q,
+                              concentration=my.cq$value, GOF=T)
+          the.result <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
+        }
+        if("method1" %in% methods){
+          res.method1 <- load.method1(year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
+          the.result <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
+
+        }
+        if("method2" %in% methods){
+          res.method2 <- load.method2(hydrology=data.frame(year=my.Q$year,
+                                                           discharge=my.Q$value),
+                                      year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
+          the.result$method2 <- res.method2$yearly.load.tons[match(the.result$year, res.method2$year)]
+        }
+
+        #adding the other relevant information into the.result
+        the.result$inflow   <- this.inflow
+        the.result$variable <- this.var
+        the.result$in_outlet <- this.outlet
+
+        my.summary.loads <- rbind(my.summary.loads, the.result)
+
+        my.summary.loads
+
+      } #closing variable loop
+    } #closing inflow loop
+  } #closing tributary loop
+
+  #calculating nutrient removal efficiency
+  my.summary.loads$year <- as.numeric(my.summary.loads$year)
+  efficiency <- data.frame(matrix(ncol = 3 + length(methods), nrow = 0))
+  colnames(efficiency) <- c("year", "inflow", "variable", methods)
+
+  for(var in levels(as.factor(my.summary.loads$variable))) {
+    for(river in levels(as.factor(my.summary.loads$inflow))){
+      for(yr in start.year:end.year){
+        eff <- c()
+        for(method in methods){
+          print(paste(var,river,yr))
+
+          relevant.data <- my.summary.loads[my.summary.loads$variable==var & my.summary.loads$inflow==river &
+                                              my.summary.loads$year==yr,]
+
+          inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][method]
+          outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][method]
+
+          eff1 <- (((inflow_value) - (outflow_value))/(inflow_value))
+          eff <- append(eff, eff1)
+        }
+        fixos <- c(yr, river, var, eff)
+        pinho <- as.data.frame(fixos)
+        colnames(pinho) <- c("year", "inflow", "variable", methods)
+        efficiency <- merge(efficiency, pinho, all.x = TRUE, all.y = TRUE)
+        efficiency
       }
-      if("method1" %in% methods){
-        res.method1 <- load.method1(year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-        the.result <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
-
-      }
-      if("method2" %in% methods){
-        res.method2 <- load.method2(hydrology=data.frame(year=my.Q$year,
-                                                         discharge=my.Q$value),
-                                    year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-        the.result$method2 <- res.method2$yearly.load.tons[match(the.result$year, res.method2$year)]
-      }
-
-      #adding the other relevant information into the.result
-      the.result$inflow   <- this.inflow
-      the.result$variable <- this.var
-      the.result$in_outlet <- this.outlet
-
-      my.summary.loads <- rbind(my.summary.loads, the.result)
-
-      my.summary.loads
-
-    } #closing variable loop
-  } #closing inflow loop
-} #closing tributary loop
-
-#calculating nutrient removal efficiency
-my.summary.loads$year <- as.numeric(my.summary.loads$year)
-efficiency <- data.frame(matrix(ncol = 3 + length(methods), nrow = 0))
-colnames(efficiency) <- c("year", "inflow", "variable", methods)
-
-for(var in levels(as.factor(my.summary.loads$variable))) {
-  for(river in levels(as.factor(my.summary.loads$inflow))){
-    for(yr in start.year:end.year){
-      eff <- c()
-      for(method in methods){
-        print(paste(var,river,yr))
-
-        relevant.data <- my.summary.loads[my.summary.loads$variable==var & my.summary.loads$inflow==river &
-                                            my.summary.loads$year==yr,]
-
-        inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][method]
-        outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][method]
-
-        eff1 <- (((inflow_value) - (outflow_value))/(inflow_value))
-        eff <- append(eff, eff1)
-      }
-      fixos <- c(yr, river, var, eff)
-      pinho <- as.data.frame(fixos)
-      colnames(pinho) <- c("year", "inflow", "variable", methods)
-      efficiency <- merge(efficiency, pinho, all.x = TRUE, all.y = TRUE)
-      efficiency
     }
   }
-}
+
+#   out <- data.frame(my.summary.loads,efficiency)
+#   return(out)
+# }
