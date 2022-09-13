@@ -10,7 +10,7 @@
 #' @param tributary Vector with characters naming the pre-dams
 #' @param startyear Numeric length 1
 #' @param endyear Numeric length 1
-#' @param methods Vector containing one or more of the available methods ("GAM.load", "method1", "method2")
+#' @param methods A vector containing one or more of the available methods ("GAM.load", "method1", "method2")
 #'
 #'
 #' @details Needs lubridate and mgcv packages.
