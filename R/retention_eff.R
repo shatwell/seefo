@@ -14,7 +14,7 @@
 #'
 #'
 #' @details Needs lubridate and mgcv packages.
-#' @return Two dataframes with annual load and retention efficiency for each nutrient
+#' @return A dataframe with annual load and retention efficiency for each nutrient
 #' @author Karsten Rinke and Taynara Fernandes
 #'
 #' @examples
