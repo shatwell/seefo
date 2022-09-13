@@ -31,7 +31,7 @@
 #
 
 #data provided by the user
-methods <- c("GAM.load", "GAM.load") #here the user can choose 3 out of 3 methods
+methods <- c("GAM.load", "method2") #here the user can choose 3 out of 3 methods
 start.year = 2001
 end.year = 2017
 
