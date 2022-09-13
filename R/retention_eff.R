@@ -31,7 +31,7 @@
 ## --> TS these should be arguments to the function
 #data provided by the user
 methods <- c("GAM.load", "GAM") #here the user can choose 3 out of 3 methods
-start.year = 2000
+start.year = 2001
 end.year = 2017
 ## <-- TS
 
