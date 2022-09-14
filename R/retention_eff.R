@@ -5,24 +5,26 @@
 #'
 #' @param startyear Numeric length 1
 #' @param endyear Numeric length 1
-#' @param methods Vector containing one or more of the available methods ("GAM.load", "method1", "method2")
+#' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
 #' @details Needs lubridate and mgcv packages.
-#' Data must be a dataframe consisting of date, variable, value, in_outlet and tributary.
-#' Variable is a character vector with nutrient's name
-#' Value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s
-#' In_outlet is a character vector "inflow" or "outflow"
-#' Tributary is a character vector naming the pre-dams
+#' Data must be a dataframe consisting of date, variable, value, in_outlet and tributary:
+#' date must be mm/dd/yyyy format;
+#' variable is a character vector with nutrient's name;
+#' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
+#' in_outlet is a character vector naming "inflow" or "outflow";
+#' tributary is a character vector naming the pre-dams.
 #'
 #'
-#' @return A dataframe with annual load and retention efficiency for each nutrient
+#' @return A dataframe annual load and retention efficiency for each nutrient
 #' @author Karsten Rinke and Taynara Fernandes
 #'
 #' @examples
-#'
+#' it should be loaded as binary into/data for the example (how to do it?)
 #' \dontrun{
-#' methods <- c("method2", "GAM")
+#' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".")
+#' methods <- c("method1","method2", "GAM.load")
 #' startyear=2000
 #' endyear=2017
 #' }
@@ -31,7 +33,7 @@
 #
 
 #data provided by the user
-methods <- c("GAM.load", "method2") #here the user can choose 3 out of 3 methods
+methods <- c("GAM.load", "method2")
 start.year = 2001
 end.year = 2017
 
@@ -67,7 +69,7 @@ load.method1 <- function(year, discharge, concentration){
   return(yearly.loads)
 }
 
-#standard method 2 (Qweighting)
+#standard method 2 (Q-weighting)
 load.method2 <- function(hydrology, year, discharge, concentration){
   loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
 
@@ -85,12 +87,6 @@ load.method2 <- function(hydrology, year, discharge, concentration){
                                       correction.factor)
   return(yearly.from.method2)
 }
-
-# --> TS this should be done by the user before calling the function
-# and should be loaded as binary into/data for the example
-#reading and formating the input data
-data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".")
-# <-- TS
 
 retention_eff <- function(data, method,start.year, end.year){
   if(!method%in%c("method1","method2","GAM.load")) {
