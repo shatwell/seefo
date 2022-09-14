@@ -17,7 +17,7 @@
 #' tributary is a character vector naming the pre-dams.
 #'
 #'
-#' @return A dataframe annual load and retention efficiency for each nutrient
+#' @return A dataframe with annual load and retention efficiency for each nutrient
 #' @author Karsten Rinke and Taynara Fernandes
 #'
 #' @examples
@@ -89,7 +89,7 @@ load.method2 <- function(hydrology, year, discharge, concentration){
 }
 
 retention_eff <- function(data, methods, start.year, end.year){
-  if(!methods%in%c("method1","method2","GAM.load")) {
+  if(!methods%in%c("method1","method2","GAM.load")){
     stop("Methods must be one of: method1, method2 or GAM.load")
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
@@ -180,7 +180,7 @@ retention_eff <- function(data, methods, start.year, end.year){
     }
   }
 #figure out a way of putting these 2 tables together
-   out <- full_join(my.summary.loads, efficiency, by=NULL)
+   out <- full_join(my.summary.loads, efficiency, by="year")
    return(out)
 }
 
