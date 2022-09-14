@@ -3,13 +3,13 @@
 #' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 acoording to Hilde 2003 and Generalized Additive Model (GAM).
 #'
 #'
+#' @param data Must be a dataframe consisting of date, variable, value, in_outlet and tributary
 #' @param startyear Numeric length 1
 #' @param endyear Numeric length 1
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
-#' @details Needs lubridate and mgcv packages.
-#' Data must be a dataframe consisting of date, variable, value, in_outlet and tributary:
+#' @details Needs lubridate and mgcv packages. Input dataframe must consist of:
 #' date must be mm/dd/yyyy format;
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
@@ -180,6 +180,7 @@ retention_eff <- function(data, methods, start.year, end.year){
     }
   }
 #figure out a way of putting these 2 tables together
-   out <- data.frame(my.summary.loads, efficiency)
+   out <- full_join(my.summary.loads, efficiency, by=NULL)
    return(out)
 }
+
