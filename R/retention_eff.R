@@ -21,9 +21,9 @@
 #' @author Karsten Rinke and Taynara Fernandes
 #'
 #' @examples
-#' it should be loaded as binary into/data for the example (how to do it?)
+#' it should be loaded as binary into/data for the example
 #' \dontrun{
-#' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".")
+#' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
 #' methods <- c("method1","method2", "GAM.load")
 #' startyear=2000
 #' endyear=2017
@@ -31,11 +31,6 @@
 #'
 #' @export
 #
-
-#data provided by the user
-methods <- c("GAM.load", "method2")
-start.year = 2001
-end.year = 2017
 
 #defining 3 functions that do the different calculations
 load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
