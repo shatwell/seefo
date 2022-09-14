@@ -88,9 +88,9 @@ load.method2 <- function(hydrology, year, discharge, concentration){
   return(yearly.from.method2)
 }
 
-retention_eff <- function(data, method,start.year, end.year){
-  if(!method%in%c("method1","method2","GAM.load")) {
-    stop("Method must be one of method1, method2 or GAM.load")
+retention_eff <- function(data, methods, start.year, end.year){
+  if(!methods%in%c("method1","method2","GAM.load")) {
+    stop("Methods must be one of: method1, method2 or GAM.load")
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
   # data$date <- lubridate::mdy(data$date)
