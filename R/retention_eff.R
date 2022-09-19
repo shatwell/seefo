@@ -32,57 +32,6 @@
 #' @export
 #
 
-#defining 3 functions that do the different calculations
-load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
-  mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
-  myGAM <-  mgcv::gam(concentration ~ s(year)+s(doy, bs="cc")+s(discharge), data=mydata)
-  dev.expl <- summary(myGAM)$dev.expl
-  if(GOF){print(dev.expl)}
-  predicted <- data.frame(times = hydrology$times,
-                          Q     = hydrology$discharge,
-                          year  = hydrology$year,
-                          pred.c= predict.gam(myGAM,
-                                              newdata = data.frame(year=hydrology$year,
-                                                                   doy =hydrology$doy,
-                                                                   discharge= hydrology$discharge)))
-  if(sum(is.na(predicted$pred.c))>0){print("warning, there are NAs in GAM predictions")}
-
-  predicted$daily.load <- predicted$pred.c*predicted$Q*3600*24 *1e-6 #in t/d
-  yearly.load <- aggregate(predicted$daily.load, by=list(predicted$year),sum)
-  names(yearly.load) <- c("year","load.tons")
-  return(yearly.load)
-}
-
-#standard method 1
-load.method1 <- function(year, discharge, concentration){
-
-  daily.loads.measured <- discharge * concentration *3600*24*1e-6 #in t/d
-  average.daily.loads  <- aggregate(daily.loads.measured, by=list(year), mean)
-  names(average.daily.loads) <- c("year","mean.daily.load.tons")
-  yearly.loads <- data.frame(year = average.daily.loads$year,
-                             yearly.load.tons = average.daily.loads$mean.daily.load.tons*365)
-  return(yearly.loads)
-}
-
-#standard method 2 (Q-weighting)
-load.method2 <- function(hydrology, year, discharge, concentration){
-  loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
-
-  mean.sampled.Q <- aggregate(discharge, by=list(year), mean)
-  names(mean.sampled.Q) <- c("year", "mean.sampled.Q")
-
-  mean.overall.Q <- aggregate(hydrology$discharge, by=list(hydrology$year), mean)
-  names(mean.overall.Q) <- c("year", "mean.overall.Q")
-
-  correction.factor <- mean.overall.Q$mean.overall.Q/mean.sampled.Q$mean.sampled.Q
-
-
-  yearly.from.method2 <- data.frame(year=loads.from.method1$year,
-                                    yearly.load.tons=loads.from.method1$yearly.load.tons *
-                                      correction.factor)
-  return(yearly.from.method2)
-}
-
 retention_eff <- function(data, methods, start.year, end.year){
   if(!methods%in%c("method1","method2","GAM.load")){
     stop("Methods must be one of: method1, method2 or GAM.load")
@@ -179,3 +128,55 @@ retention_eff <- function(data, methods, start.year, end.year){
    return(out)
 }
 
+
+
+#defining 3 functions that do the different calculations
+load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
+  mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
+  myGAM <-  mgcv::gam(concentration ~ s(year)+s(doy, bs="cc")+s(discharge), data=mydata)
+  dev.expl <- summary(myGAM)$dev.expl
+  if(GOF){print(dev.expl)}
+  predicted <- data.frame(times = hydrology$times,
+                          Q     = hydrology$discharge,
+                          year  = hydrology$year,
+                          pred.c= predict.gam(myGAM,
+                                              newdata = data.frame(year=hydrology$year,
+                                                                   doy =hydrology$doy,
+                                                                   discharge= hydrology$discharge)))
+  if(sum(is.na(predicted$pred.c))>0){print("warning, there are NAs in GAM predictions")}
+
+  predicted$daily.load <- predicted$pred.c*predicted$Q*3600*24 *1e-6 #in t/d
+  yearly.load <- aggregate(predicted$daily.load, by=list(predicted$year),sum)
+  names(yearly.load) <- c("year","load.tons")
+  return(yearly.load)
+}
+
+#standard method 1
+load.method1 <- function(year, discharge, concentration){
+
+  daily.loads.measured <- discharge * concentration *3600*24*1e-6 #in t/d
+  average.daily.loads  <- aggregate(daily.loads.measured, by=list(year), mean)
+  names(average.daily.loads) <- c("year","mean.daily.load.tons")
+  yearly.loads <- data.frame(year = average.daily.loads$year,
+                             yearly.load.tons = average.daily.loads$mean.daily.load.tons*365)
+  return(yearly.loads)
+}
+
+#standard method 2 (Q-weighting)
+load.method2 <- function(hydrology, year, discharge, concentration){
+  loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
+
+  mean.sampled.Q <- aggregate(discharge, by=list(year), mean)
+  names(mean.sampled.Q) <- c("year", "mean.sampled.Q")
+
+  mean.overall.Q <- aggregate(hydrology$discharge, by=list(hydrology$year), mean)
+  names(mean.overall.Q) <- c("year", "mean.overall.Q")
+
+  correction.factor <- mean.overall.Q$mean.overall.Q/mean.sampled.Q$mean.sampled.Q
+
+
+  yearly.from.method2 <- data.frame(year=loads.from.method1$year,
+                                    yearly.load.tons=loads.from.method1$yearly.load.tons *
+                                      correction.factor)
+  return(yearly.from.method2)
+}
