@@ -4,12 +4,12 @@
 #'
 #'
 #' @param data Must be a dataframe consisting of date, variable, value, in_outlet and tributary
-#' @param startyear Numeric length 1
-#' @param endyear Numeric length 1
+#' @param start.year Numeric length 1
+#' @param end.year Numeric length 1
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
-#' @details Needs "lubridate" and "mgcv" packages. Input data frame must consist of:
+#' @details Input data frame must consist of:
 #' date must be mm/dd/yyyy format;
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
@@ -21,12 +21,12 @@
 #' @author Karsten Rinke, Taynara Fernandes and Tom Shatwell
 #'
 #' @examples
-#' Load it as binary data for the example
+#' #Load it as binary data for the example
 #' \dontrun{
 #' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
 #' methods <- c("method1","method2", "GAM.load")
-#' startyear=2000
-#' endyear=2017
+#' start.year=2000
+#' end.year=2017
 #' }
 #'
 #' @export
@@ -123,7 +123,7 @@ retention_eff <- function(data, methods, start.year, end.year){
       }
     }
   }
-   out <- full_join(my.summary.loads, efficiency, by="year")
+   out <- dplyr::full_join(my.summary.loads, efficiency, by="year")
    return(out)
 }
 
@@ -136,14 +136,14 @@ load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
   predicted <- data.frame(times = hydrology$times,
                           Q     = hydrology$discharge,
                           year  = hydrology$year,
-                          pred.c= predict.gam(myGAM,
+                          pred.c= mgcv::predict.gam(myGAM,
                                               newdata = data.frame(year=hydrology$year,
                                                                    doy =hydrology$doy,
                                                                    discharge= hydrology$discharge)))
   if(sum(is.na(predicted$pred.c))>0){print("warning, there are NAs in GAM predictions")}
 
   predicted$daily.load <- predicted$pred.c*predicted$Q*3600*24 *1e-6 #in t/d
-  yearly.load <- aggregate(predicted$daily.load, by=list(predicted$year),sum)
+  yearly.load <- stats::aggregate(predicted$daily.load, by=list(predicted$year),sum)
   names(yearly.load) <- c("year","load.tons")
   return(yearly.load)
 }
@@ -152,7 +152,7 @@ load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
 load.method1 <- function(year, discharge, concentration){
 
   daily.loads.measured <- discharge * concentration *3600*24*1e-6 #in t/d
-  average.daily.loads  <- aggregate(daily.loads.measured, by=list(year), mean)
+  average.daily.loads  <- stats::aggregate(daily.loads.measured, by=list(year), mean)
   names(average.daily.loads) <- c("year","mean.daily.load.tons")
   yearly.loads <- data.frame(year = average.daily.loads$year,
                              yearly.load.tons = average.daily.loads$mean.daily.load.tons*365)
@@ -163,10 +163,10 @@ load.method1 <- function(year, discharge, concentration){
 load.method2 <- function(hydrology, year, discharge, concentration){
   loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
 
-  mean.sampled.Q <- aggregate(discharge, by=list(year), mean)
+  mean.sampled.Q <- stats::aggregate(discharge, by=list(year), mean)
   names(mean.sampled.Q) <- c("year", "mean.sampled.Q")
 
-  mean.overall.Q <- aggregate(hydrology$discharge, by=list(hydrology$year), mean)
+  mean.overall.Q <- stats::aggregate(hydrology$discharge, by=list(hydrology$year), mean)
   names(mean.overall.Q) <- c("year", "mean.overall.Q")
 
   correction.factor <- mean.overall.Q$mean.overall.Q/mean.sampled.Q$mean.sampled.Q
