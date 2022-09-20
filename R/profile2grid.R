@@ -107,7 +107,7 @@ profile2grid <- function(data, datetime, depth, value,
     dat[dt==y, if(sum(!is.na(val))<5) {
       stop("Not enough non-NA values to interpolate")
     } else {
-      approx(x = dep, y = val, xout = ..outdepths, rule=rule)$y
+      stats::approx(x = dep, y = val, xout = ..outdepths, rule=rule)$y
     }]
   }
 
@@ -129,7 +129,7 @@ profile2grid <- function(data, datetime, depth, value,
               paste(dates[drop],"\t")))
     if(dropNAs) {
       out <- out[,retain]
-      attirbutes(out)$dt <- dates[retain]
+      attributes(out)$dt <- dates[retain]
     }
   }
 
