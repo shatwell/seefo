@@ -1,6 +1,6 @@
 #' @title Nutrients load and retention efficiency calculator
 #'
-#' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 acoording to Hilde 2003 and Generalized Additive Model (GAM).
+#' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 according to Hilde 2003 and Generalized Additive Model (GAM).
 #'
 #'
 #' @param data Must be a dataframe consisting of date, variable, value, in_outlet and tributary
@@ -9,7 +9,7 @@
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
-#' @details Needs lubridate and mgcv packages. Input dataframe must consist of:
+#' @details Needs "lubridate" and "mgcv" packages. Input data frame must consist of:
 #' date must be mm/dd/yyyy format;
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
@@ -18,10 +18,10 @@
 #'
 #'
 #' @return A dataframe with annual load and retention efficiency for each nutrient
-#' @author Karsten Rinke and Taynara Fernandes
+#' @author Karsten Rinke, Taynara Fernandes and Tom Shatwell
 #'
 #' @examples
-#' it should be loaded as binary into/data for the example
+#' Load it as binary data for the example
 #' \dontrun{
 #' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
 #' methods <- c("method1","method2", "GAM.load")
@@ -37,7 +37,7 @@ retention_eff <- function(data, methods, start.year, end.year){
     stop("Methods must be one of: method1, method2 or GAM.load")
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
-  # data$date <- lubridate::mdy(data$date)
+  #data$date <- lubridate::mdy(data$date)
   data$doy <- lubridate::yday(data$date)
   data$year <- lubridate::year(data$date)
   my.summary.loads <- data.frame(NULL)
@@ -58,7 +58,7 @@ retention_eff <- function(data, methods, start.year, end.year){
 
         the.result <- data.frame(NULL)
 
-        #we have to add the discharge Q to all measurements of the current variable in my.cq
+        #add the discharge Q to all measurements of the current variable in my.cq
         my.cq$Q <- my.Q$value[match(my.cq$date,my.Q$date)]
         if("GAM.load" %in% methods){
           res.GAM <- load.GAM(hydrology=data.frame(times=my.Q$date,
@@ -123,12 +123,9 @@ retention_eff <- function(data, methods, start.year, end.year){
       }
     }
   }
-#figure out a way of putting these 2 tables together
    out <- full_join(my.summary.loads, efficiency, by="year")
    return(out)
 }
-
-
 
 #defining 3 functions that do the different calculations
 load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
