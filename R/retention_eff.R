@@ -3,7 +3,7 @@
 #' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 according to Hilde 2003 and Generalized Additive Model (GAM).
 #'
 #'
-#' @param data Must be a dataframe consisting of date, variable, value, in_outlet and tributary
+#' @param data Must be a dataframe with columns: date(POSIXct), variable (character), value (numeric), in_outlet (character) and tributary (character)
 #' @param start.year Numeric length 1
 #' @param end.year Numeric length 1
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
