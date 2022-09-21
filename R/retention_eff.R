@@ -25,15 +25,14 @@
 #' \dontrun{
 #' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
 #' methods <- c("method1","method2","GAM.load")
-#' start.year=2000
-#' end.year=2017
+#' retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load")
 #' }
 #'
 #' @export
 #
 
 retention_eff <- function(data, methods, start.year, end.year){
-  if(!methods%in%c("method1","method2","GAM.load")){
+  ifelse(!methods%in%c("method1","method2","GAM.load")){
     stop("Methods must be one of: method1, method2 or GAM.load")
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
