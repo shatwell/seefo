@@ -32,7 +32,8 @@
 #
 
 retention_eff <- function(data, methods, start.year, end.year){
-  if(!is.element(methods,c("method1", "method2", "GAM.load"))){
+  met <- c("method1", "method2", "GAM.load")
+  if(!is.element(methods, met)){
     stop("Methods must be one of: method1, method2 or GAM.load")
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
