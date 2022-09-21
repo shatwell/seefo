@@ -24,7 +24,7 @@
 #' #Load it as binary data for the example
 #' \dontrun{
 #' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
-#' methods <- c("method1","method2", "GAM.load")
+#' methods <- c("method1","method2","GAM.load")
 #' start.year=2000
 #' end.year=2017
 #' }
@@ -109,8 +109,8 @@ retention_eff <- function(data, methods, start.year, end.year){
           relevant.data <- my.summary.loads[my.summary.loads$variable==var & my.summary.loads$inflow==river &
                                               my.summary.loads$year==yr,]
 
-          inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][methods]
-          outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][methods]
+          inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][method]
+          outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][method]
 
           eff1 <- (((inflow_value) - (outflow_value))/(inflow_value))
           eff <- append(eff, eff1)
