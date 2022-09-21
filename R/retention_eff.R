@@ -33,8 +33,10 @@
 
 retention_eff <- function(data, methods, start.year, end.year){
   met <- c("method1", "method2", "GAM.load")
-  if(!is.element(methods, met)){
-    stop("Methods must be one of: method1, method2 or GAM.load")
+  for(i in 1:length(methods)) {
+    if(methods[i] %in% met) {
+      stop("Methods must be one of: method1, method2 or GAM.load")
+    }
   }
   data <- data[data$year>=start.year & data$year<=end.year,]
   #data$date <- lubridate::mdy(data$date)
