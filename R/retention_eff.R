@@ -109,8 +109,8 @@ retention_eff <- function(data, methods, start.year, end.year){
           relevant.data <- my.summary.loads[my.summary.loads$variable==var & my.summary.loads$inflow==river &
                                               my.summary.loads$year==yr,]
 
-          inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][method]
-          outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][method]
+          inflow_value <- relevant.data[relevant.data$in_outlet=="inflow",][methods]
+          outflow_value <- relevant.data[relevant.data$in_outlet=="outflow",][methods]
 
           eff1 <- (((inflow_value) - (outflow_value))/(inflow_value))
           eff <- append(eff, eff1)
