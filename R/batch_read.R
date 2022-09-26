@@ -40,7 +40,6 @@
 #' i72 <- batch_read(sonde="ixx", path=loc)
 #' head(i72)
 #'
-#' out <- batch_read(sonde="ctm", path="../data/")
 #' }
 #'
 #' @export
