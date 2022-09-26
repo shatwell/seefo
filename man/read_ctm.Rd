@@ -37,7 +37,10 @@ The \code{header} can include \code{c("no","press","temp","cond","cond_hi","sali
 }
 \examples{
 \dontrun{
-strat <- analyse_strat(Ts = df[,2], Tb = df[,ncol(df)], dates = df[,1])
+pr_loc <- system.file("extdata", package="seefo")
+pr_name <- file.path(pr_loc,  "profiles","20170801","YT1_20170801_1.CTM644")
+pr1 <- read_ctm(pr_name)
+head(pr1)
 }
 
 }

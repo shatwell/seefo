@@ -24,11 +24,14 @@
 #'
 #' @author Tom Shatwell
 #'
-#' @seealso \code{\link{get_profile_info}} \code{\link{read_bbe}}
+#' @seealso \code{\link{get_profile_info}}, \code{\link{read_bbe}}, \code{\link{clean_profile}}, \code{\link{batch_read}}
 #'
 #' @examples
 #' \dontrun{
-#' strat <- analyse_strat(Ts = df[,2], Tb = df[,ncol(df)], dates = df[,1])
+#' pr_loc <- system.file("extdata", package="seefo")
+#' pr_name <- file.path(pr_loc,  "profiles","20170801","YT1_20170801_1.CTM644")
+#' pr1 <- read_ctm(pr_name)
+#' head(pr1)
 #' }
 #'
 #' @export

@@ -11,23 +11,27 @@
 #' This function first collects information from the filename using `get_profile_info()`,
 #' including the sampling location from the beginning of the filename,
 #' and the sonde number from the file extension.
-#' It begins to read data in the file 2 lines after the keyword "Datasets".
-#' It assigns the names in `header` to the columns. If `header` is set to `"auto"`,
-#' it will assign hard coded names according to the sonde number, hoping that one sonde always thas the same sensors attached.
+#' It parses the column names from the file, and then reads the data.
 #' It converts the date and time columns to a POSIX datetime with the timezone `TZ`.
 #' The function finally drops any columns that are not named in `keep`.
+#' The new column `pr_dt` is a unique timestamp for that profile, which is useful when compiling lots of profiles.
 #' If `keep` contains names not found in the header, it will add a column of `NA`s for each unfound name.
-#' The `header` can include `c("no","press","temp","cond","cond_hi","salin","DO_sat","DO","pH","turb","chla","BGAPE","BGAPC","sv","intD","intT")`
+#' If you choose to `clean` the profile, this removes any air values, values from the upward cast,
+#' and the lowest 0.5 m of the profile to avoid sediment contact.
+#'
 #'
 #' @return A `data.frame` containing the profile data
 #'
 #' @author Tom Shatwell
 #'
-#' @seealso \code{\link{get_profile_info}},  \code{\link{read_ctm}}
+#' @seealso \code{\link{get_profile_info}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}, \code{\link{batch_read}}
 #'
 #' @examples
 #' \dontrun{
-#' bbe <- read_bbe(Ts = df[,2], Tb = df[,ncol(df)], dates = df[,1])
+#' bbe_loc <- system.file("extdata", package="seefo")
+#' bbe_name <- file.path(bbe_loc,  "profiles","20170801","YT1_20170801_1..FP2101")
+#' bbe <- read_bbe(bbe_name)
+#' head(bbe)
 #' }
 #'
 #' @export
@@ -85,12 +89,4 @@ read_bbe <- function(filename, keep = c("depth","sample_temperature","Green_Alga
   if(clean) dat <- clean_profile(dat)
 
   return(dat)
-
-  # return(data.frame(dt=dt,
-  #                   pr_dt = pr_dt,
-  #                   sonde=ext,
-  #                   location=info["loc"],
-  #                   dat[,outvars], #, comment=info["comment"]
-  #                   row.names=NULL
-  # ))
 }

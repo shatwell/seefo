@@ -26,7 +26,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' ixx <- read_ixx(add_later, ...)
+#' pr_loc <- system.file("extdata", package="seefo")
+#' pr_name <- file.path(pr_loc,  "profiles","20170801","YTN_20110321_1.i172")
+#' pr1 <- read_ixx(pr_name)
+#' head(pr1)
 #' }
 #'
 #' @export

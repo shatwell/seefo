@@ -21,10 +21,25 @@
 #'
 #' @author Tom Shatwell
 #'
-#' @seealso \code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}
+#' @seealso \code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}
 #'
 #' @examples
 #' \dontrun{
+#' # the location of the folder containing example data
+#' loc <- file.path(system.file("extdata", package="seefo"), "profiles")
+#'
+#' # show the contents
+#' list.files(loc, recursive=TRUE)
+#'
+#' ctm <- batch_read(sonde="ctm", path=loc)
+#' head(ctm)
+#'
+#' bbe <- batch_read(sonde="bbe", path=loc)
+#' head(bbe)
+#'
+#' i72 <- batch_read(sonde="ixx", path=loc)
+#' head(i72)
+#'
 #' out <- batch_read(sonde="ctm", path="../data/")
 #' }
 #'
