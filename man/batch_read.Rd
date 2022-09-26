@@ -40,16 +40,33 @@ By default, it searches a given directory and all subdirectories for matching fi
 cleans up the data, and returns it sorted and labelled.
 }
 \details{
-To be added later.
+This function scans a location for raw sonde files, and matches them by their file extension (.CTM1234 for instance).
+I then reads all the discovered raw datafiles in the given directory and returns a data.frame containing
+the all the data sorted chronologically, also with the sampling location (which is determined from the
+filename). If data are also located in subdirectories, set \code{recursive = TRUE} to search these as well.
 }
 \examples{
 \dontrun{
-out <- batch_read(sonde="ctm", path="../data/")
+# the location of the folder containing example data
+loc <- file.path(system.file("extdata", package="seefo"), "profiles")
+
+# show the contents
+list.files(loc, recursive=TRUE)
+
+ctm <- batch_read(sonde="ctm", path=loc)
+head(ctm)
+
+bbe <- batch_read(sonde="bbe", path=loc)
+head(bbe)
+
+i72 <- batch_read(sonde="ixx", path=loc)
+head(i72)
+
 }
 
 }
 \seealso{
-\code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}
+\code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}
 }
 \author{
 Tom Shatwell

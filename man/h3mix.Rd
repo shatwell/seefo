@@ -72,6 +72,15 @@ T <- c(25.44,25.46,25.48,25.46,25.44,24.36,20.48,18.09,15.96,13.95,11.67,
 8.05,7.94,7.93,7.85)
 z <- 0:28
 h3mix(T,z,plot=TRUE)
+
+# now with a real profile:
+pr_loc <- system.file("extdata", package="seefo")
+pr_name <- file.path(pr_loc,  "profiles","20170704","YT1_20170704_1.CTM644")
+pr1 <- read_ctm(pr_name)
+head(pr1)
+
+h3mix(T=pr1$temp, z=pr1$press, plot=TRUE)
+
 }
 
 }

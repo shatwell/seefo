@@ -27,11 +27,35 @@ including annual mean,
 max and total duration of ice cover.
 }
 \details{
-To be added later.
+Returns a data.frame containing ice phenology statistics
+including mean and maximum ice duration, time (as day of year) of
+first freeze and last thaw, the maximum ice thickness and the day
+of year on which it occurred. \code{IceOn} and \code{IceOff} are the day of year
+of the freezing and thawing of the longest uninterrupted period of ice cover.
+The function also works if you don't have ice thickness, but only a measure of
+presence/absence of ice. Here absence of ice should be indicated by \code{0} or \code{FALSE},
+whereas presence of ice can be \code{TRUE} or any number greater than zero.
+If you do not supply ice thickness, you must disregard the \code{HiceMax} and \code{HiceMaxDay}
+columns. The function will return a negative day of year if the ice cover starts
+in one year and ends in the next. Positive doys refer to the year of winter in January
+in the northern hemisphere. Negative numbers refer to the same winter but in the previous calendar year.
+The day of year = 0 on January 1, doy = -1 on Dec 31,
+and doy = 2 on January 3. This allows you to calculate ice cover duration
+as thaw time - freeze time, even if the ice cover spans two calendar years.
+The argument \code{NH} adjusts this for the different winter
+seasons in northern and southern hemisphere.
 }
 \examples{
 \dontrun{
-add later
+data(Ts_Tb_ice)
+head(Ts_Tb_ice)
+ice_phenology(H_ice =  Ts_Tb_ice$H_ice, dates = Ts_Tb_ice$date)
+
+# also works if you don't have ice thickness,
+# just presence/absence:
+
+icepresence <- Ts_Tb_ice$H_ice > 0
+ice_phenology(H_ice =  icepresence, dates = Ts_Tb_ice$date)
 }
 
 }

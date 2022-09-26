@@ -71,6 +71,19 @@ The location and variable name are kept in the attributes of the output. Pad_mis
 ta <- gather_era5_var(namestrings = "2m_temperature", varid = "t2m",
 datapath="../nc_input/era5_north_aral/",
 lon=60.25, lat=46.5)
+
+
+# the location of the folder containing example data
+
+loc <- file.path(system.file("extdata", package="seefo"), "nc")
+loc <- paste0(loc,"/") # add file separator (I should fix this)
+
+# show the contents
+list.files(loc, recursive=TRUE)
+
+out <- gather_era5_var(namestrings = c("era5", "cloud_base_height"),
+                       varid = "cbh", lon = 5.49, lat = 51.06,
+                       datapath = loc)
 }
 
 

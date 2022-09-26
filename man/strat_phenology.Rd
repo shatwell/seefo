@@ -89,7 +89,16 @@ in the southern hemisphere.
 }
 \examples{
 \dontrun{
-add later
+# Load some temperature data
+
+data(Ts_Tb_ice)
+
+strat_phenology(Ts = Ts_Tb_ice$Ts, Tb = Ts_Tb_ice$Tb, dates = Ts_Tb_ice$date)
+
+
+strat_phenology(Ts = Ts_Tb_ice$Ts, Tb = Ts_Tb_ice$Tb,
+                       H_ice =  Ts_Tb_ice$H_ice, dates = Ts_Tb_ice$date)
+
 }
 
 }

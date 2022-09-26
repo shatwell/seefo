@@ -49,7 +49,7 @@ head(bbe)
 
 }
 \seealso{
-\code{\link{get_profile_info}},  \code{\link{read_ctm}}
+\code{\link{get_profile_info}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}, \code{\link{batch_read}}
 }
 \author{
 Tom Shatwell

@@ -45,7 +45,7 @@ head(pr1)
 
 }
 \seealso{
-\code{\link{get_profile_info}} \code{\link{read_bbe}}
+\code{\link{get_profile_info}}, \code{\link{read_bbe}}, \code{\link{clean_profile}}, \code{\link{batch_read}}
 }
 \author{
 Tom Shatwell

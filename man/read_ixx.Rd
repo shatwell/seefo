@@ -36,7 +36,7 @@ If \code{keep} contains names not found in the header, it will add a column of \
 \dontrun{
 pr_loc <- system.file("extdata", package="seefo")
 pr_name <- file.path(pr_loc,  "profiles","20170801","YTN_20110321_1.i172")
-pr1 <- read_ctm(pr_name)
+pr1 <- read_ixx(pr_name)
 head(pr1)
 }
 

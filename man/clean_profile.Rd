@@ -29,7 +29,13 @@ The idea of \code{remove_lower} is to remove the lowest values when the sonde hi
 }
 \examples{
 \dontrun{
-strat <- analyse_strat(Ts = df[,2], Tb = df[,ncol(df)], dates = df[,1])
+pr_loc <- system.file("extdata", package="seefo")
+pr_name <- file.path(pr_loc,  "profiles","20170801","YT1_20170801_1.CTM644")
+pr1 <- read_ctm(pr_name, clean=FALSE)
+tail(pr1)
+
+clean_profile(pr1)
+tail(pr1)
 }
 
 }
