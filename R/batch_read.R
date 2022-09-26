@@ -15,7 +15,10 @@
 #' @param TZ time zone given to the output datetimes, defaults to `"UTC"` (recommended)
 #'
 #' @details
-#' To be added later.
+#' This function scans a location for raw sonde files, and matches them by their file extension (.CTM1234 for instance).
+#' I then reads all the discovered raw datafiles in the given directory and returns a data.frame containing
+#' the all the data sorted chronologically, also with the sampling location (which is determined from the
+#' filename). If data are also located in subdirectories, set `recursive = TRUE` to search these as well.
 #'
 #' @return A `data.frame` containing the profile data
 #'
