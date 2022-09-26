@@ -23,7 +23,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' add later
+#' data(Ts_Tb_ice)
+#' head(Ts_Tb_ice)
+#' ice_phenology(H_ice =  Ts_Tb_ice$H_ice, dates = Ts_Tb_ice$date)
+#'
+#' # also works if you don't have ice thickness,
+#' # just presence/absence:
+#'
+#' icepresence <- Ts_Tb_ice$H_ice > 0
+#' ice_phenology(H_ice =  icepresence, dates = Ts_Tb_ice$date)
 #' }
 #'
 #' @export
