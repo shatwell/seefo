@@ -27,20 +27,20 @@ Don't forget to use the correct package name.
 
 The package contains the following functions:
 
-`retention_eff()` calculates nutrient retention
-`batch_read()` read multiple raw sonde files and compile into a data.frame.
-`read_ctm()` read a ctm sonde raw datafile
-`read_bbe()` read a bbe sonde raw datafile
-`read_ixx()` read an ixx (e.g. i172) sonde raw datafile
-`clean_profile()` cleans up a profile by removing unwanted values
-`get_profile_info()` parses the raw sonde dataname to extract information (used in other functions)
-`profile2grid()` interpolates multiple profiles in long format to fixed depths in wide format
-`strat_phenology()`, `ice_phenology()` calculate stratification and ice phenology
-`hmix()`, `h2mix()`, `h3mix()`, `delta_rho()` calculate the mixed layer depth in lakes
-`era5cli()` generates a download command for using with the era5cli (command line interface)
-`gather_era5_var()` reads and collates era5 reanalysis data from multiple netcdf download files for a given location
-`dewpoint2humidity()` converts dewpoint temperature to humidity
-`rho_water()` calculates water density
+`retention_eff()` calculates nutrient retention\n
+`batch_read()` reads multiple raw sonde files and compile into a data.frame\n
+`read_ctm()` reads a ctm sonde raw datafile\n
+`read_bbe()` reads a bbe sonde raw datafile\n
+`read_ixx()` reads an ixx (e.g. i172) sonde raw datafile\n
+`clean_profile()` cleans up a profile by removing unwanted values\n
+`get_profile_info()` parses the raw sonde dataname to extract information (used in other functions)\n
+`profile2grid()` interpolates multiple profiles in long format to fixed depths in wide format,\n
+`strat_phenology()`, `ice_phenology()` calculate stratification and ice phenology\n
+`hmix()`, `h2mix()`, `h3mix()`, `delta_rho()` calculate the mixed layer depth in lakes\n
+`era5cli()` generates a download command for using with the era5cli (command line interface)\n
+`gather_era5_var()` reads and collates era5 reanalysis data from multiple netcdf download files for a given location\n
+`dewpoint2humidity()` converts dewpoint temperature to humidity\n
+`rho_water()` calculates water density\n
 `leap()` is a helper function that determines if a year is a leap year
 
 
