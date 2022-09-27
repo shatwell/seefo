@@ -1,11 +1,11 @@
 
-# seefo
+# seefo: an R package for data analyses in lake research
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 The seefo package is a collection of useful functions and tools for common tasks in lake research in the SEEFO department at UFZ. It is a growing, collaborative project and additional contributions are welcome and encouraged. 
-These tools include: calculating ice and stratification phenology, reading raw data files from sondes, calculating water density and leap years, calculating volume-weighted mean using hyspographic information, interpolating to fixed depth grids or daily values.
+There are tools for calculating stratification and ice phenology, downloading and reading ERA5 reanalysis data, working with time series, like interpolating profiles to fixed depths, or interpolating over time to daily values, and calculating volume-weighted means with morphometric information. There are also functions for calculating nutrient retention in lakes or reservoirs, and for reading and working with raw sensor data for common sensors in the department.
 
 ## Installation
 
@@ -22,6 +22,27 @@ Alternatively, if you run into problems here, you can download the compressed fi
 install.packages("path/to/package/file/on/your/computer/seefo_v.e.r.sion.tar.gz"", type='source')
 ```
 Don't forget to use the correct package name.
+
+## Overview
+
+The package contains the following functions:
+
+`retention_eff()` calculates nutrient retention
+`batch_read()` read multiple raw sonde files and compile into a data.frame.
+`read_ctm()` read a ctm sonde raw datafile
+`read_bbe()` read a bbe sonde raw datafile
+`read_ixx()` read an ixx (e.g. i172) sonde raw datafile
+`clean_profile()` cleans up a profile by removing unwanted values
+`get_profile_info()` parses the raw sonde dataname to extract information (used in other functions)
+`profile2grid()` interpolates multiple profiles in long format to fixed depths in wide format
+`strat_phenology()`, `ice_phenology()` calculate stratification and ice phenology
+`hmix()`, `h2mix()`, `h3mix()`, `delta_rho()` calculate the mixed layer depth in lakes
+`era5cli()` generates a download command for using with the era5cli (command line interface)
+`gather_era5_var()` reads and collates era5 reanalysis data from multiple netcdf download files for a given location
+`dewpoint2humidity()` converts dewpoint temperature to humidity
+`rho_water()` calculates water density
+`leap()` is a helper function that determines if a year is a leap year
+
 
 ## Examples
 
@@ -96,8 +117,7 @@ There's more to  come, as it's under development.
 ### Calculating stratification information
 
 You can use `strat_phenology()` to calculate stratification timing metrics, and `ice_phenology()` for ice metrics. 
-`strat_phenology()` was the hardest function to program as ice and stratification phenology is tricky, 
-but it has been tested on over 60 lakes and works reliably.:
+Calculating these metrics is very tricky, and `strat_phenology()` does many checks to get it right and has been tested on over 60 lakes and works fairly reliably. You should use daily data when using it:
 
 ``` r
 data(Ts_Tb_ice)
@@ -107,13 +127,13 @@ head(out)
 ```
 `hmix()` and `h2mix()` calculate the bottom of the epilimnion and top of the hypolimnion based on the 
 density gradient. The are designed to run fast on huge modelling datasets, so they don't do any checks.
-`h3mix()` is much more robust and is useful for measured and/or messay and irregular data:
+`h3mix()` is much more robust and is useful for measured and/or messy and irregular data. `delta_rho()` estimates mixed layer depth based on a density threshold and is quite robust when all else fails:
 
 ``` r
 pr_loc <- system.file("extdata", package="seefo")
 pr_name <- file.path(pr_loc,  "profiles","20170704","YT1_20170704_1.CTM644")
-pr1 <- read_ctm(pr_name)
-head(pr1)
+pr <- read_ctm(pr_name)
+head(pr)
 
-h3mix(T=pr1$temp, z=pr1$press, plot=TRUE)
+h3mix(T=pr$temp, z=pr$press, plot=TRUE)
 ````
