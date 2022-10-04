@@ -69,21 +69,24 @@ retention_eff <- function(data, methods, start.year, end.year){
                                                    discharge=my.Q$value),
                               year=my.cq$year, doy=my.cq$doy, discharge=my.cq$Q,
                               concentration=my.cq$value, GOF=T)
-          the.result <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
+          the.result.gam <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
         }
         if("method1" %in% methods){
           res.method1 <- load.method1(year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-          the.result <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
+          the.result.1 <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
 
         }
         if("method2" %in% methods){
           res.method2 <- load.method2(hydrology=data.frame(year=my.Q$year,
                                                            discharge=my.Q$value),
                                       year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-          the.result$method2 <- res.method2$yearly.load.tons[match(the.result$year, res.method2$year)]
+          the.result.2 <- data.frame(year=res.method2$year, method2 = res.method2$yearly.load.tons)
         }
 
         #adding the other relevant information into the.result
+        the.result <- rbind(the.result, the.result.1)
+        df_list <- list(the.result, the.result.2, the.result.gam)
+        the.result <- reshape::merge_recurse(df_list)
         the.result$inflow   <- this.inflow
         the.result$variable <- this.var
         the.result$in_outlet <- this.outlet

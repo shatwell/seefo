@@ -7,7 +7,7 @@
 retention_eff(data, methods, start.year, end.year)
 }
 \arguments{
-\item{data}{Must be a dataframe consisting of date, variable, value, in_outlet and tributary}
+\item{data}{Must be a dataframe with columns: date(POSIXct), variable (character), value (numeric), in_outlet (character) and tributary (character)}
 
 \item{methods}{Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")}
 
@@ -33,9 +33,8 @@ tributary is a character vector naming the pre-dams.
 #Load it as binary data for the example
 \dontrun{
 data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
-methods <- c("method1","method2", "GAM.load")
-start.year=2000
-end.year=2017
+methods <- c("method1","method2","GAM.load")
+retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load")
 }
 
 }
