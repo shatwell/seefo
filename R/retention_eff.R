@@ -128,7 +128,14 @@ retention_eff <- function(data, methods, start.year, end.year){
       }
     }
   }
-   out <- dplyr::full_join(my.summary.loads, efficiency, by="year")
+  result <- rep("Retention Efficiency (%)", (nrow = length(efficiency$year)))
+  efficiency <- cbind(efficiency, result)
+
+  result.load <- rep("Load (ton/year)", (nrow = length(my.summary.loads$year)))
+  my.summary.loads <- cbind(my.summary.loads, result.load)
+
+
+   out <- (list(my.summary.loads, efficiency))
    return(out)
 }
 

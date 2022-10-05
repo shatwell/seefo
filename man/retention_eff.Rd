@@ -34,7 +34,7 @@ tributary is a character vector naming the pre-dams.
 \dontrun{
 data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
 methods <- c("method1","method2","GAM.load")
-retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load")
+retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
 }
 
 }
