@@ -17,7 +17,7 @@
 #' tributary is a character vector naming the pre-dams.
 #'
 #'
-#' @return A dataframe with annual load and retention efficiency for each nutrient
+#' @return A list containing 2 dataframes: annual load and retention efficiency
 #' @author Karsten Rinke, Taynara Fernandes and Tom Shatwell
 #'
 #' @examples
