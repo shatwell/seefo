@@ -12,7 +12,8 @@
 #' Copied again: an integer (of length 1 or 2) describing how interpolation is to take place outside the interval `[min(x), max(x)]`.
 #' If rule is 1 then NAs are returned for such points and if it is 2, the value at the closest data extreme is used.
 #' Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.
-#' @param dropNAs Should bad profiles be dropped (`TRUE`) or retained as NAs (`FALSE`) (logical).
+#' @param dropNAs Should bad profiles be dropped (`TRUE`) or retained as NAs (`FALSE`) (logical). Only when `wide = TRUE`. NAs are dropped automatically in long format.
+#' @param wide Should the output be a matrix in wide format (`TRUE`) or a data.frame in long format (`FALSE`)?
 #'
 #' @details
 #' The function takes as input a table in long format, with columns for a timestamp, depth, and measured values.
@@ -64,7 +65,7 @@
 
 profile2grid <- function(data, datetime, depth, value,
                          outdepths=NULL, rule=c(2,1),
-                         dropNAs=FALSE) {
+                         dropNAs=FALSE, wide=TRUE) {
   # require(data.table)
   select_cols <- c(datetime,depth,value)
   if(data.table::is.data.table(data)) {
@@ -116,22 +117,35 @@ profile2grid <- function(data, datetime, depth, value,
   retain <- which(sapply(out, isValid)) # which files were successfully read?
   drop <- which(!(1:length(dates)) %in% retain)
   out[drop] <- rep(list(rep(NA, length(outdepths))), length(drop))
+  out <- unlist(out)
 
-  out <- matrix(unlist(out),nrow = length(outdepths))
-  attributes(out)$outdepths <- outdepths
-  attributes(out)$dt <- dates
-  attributes(out)$value <- value
-  attributes(out)$NA_profiles <- dates[drop]
+  if(wide) {
+    out <- matrix(out,nrow = length(outdepths))
+    attributes(out)$outdepths <- outdepths
+    attributes(out)$dt <- dates
+    attributes(out)$value <- value
+    attributes(out)$NA_profiles <- dates[drop]
 
-  if(length(drop) > 0) { # print profiles that were not successful as warning
-    warning(c("Could not interpolate ", length(drop),
-              " (of ", length(dates),") profiles:\n",
-              paste(dates[drop],"\t")))
-    if(dropNAs) {
-      out <- out[,retain]
-      attributes(out)$dt <- dates[retain]
+    if(length(drop) > 0) { # print profiles that were not successful as warning
+      warning(c("Could not interpolate ", length(drop),
+                " (of ", length(dates),") profiles:\n",
+                paste(dates[drop],"\t")))
+      if(dropNAs) {
+        out <- out[,retain]
+        attributes(out)$dt <- dates[retain]
+      }
     }
+  } else {
+      out <- data.frame(rep(dates,each=length(outdepths)),
+                        rep(outdepths, length(dates)),
+                        out)
+      names(out) <- c(datetime, depth, value)
+      out <- out[!is.na(out[,value]),]
+      if(length(drop) > 0) { # print profiles that were not successful as warning
+        warning(c("Could not interpolate ", length(drop),
+                  " (of ", length(dates),") profiles:\n",
+                  paste(dates[drop],"\t")))
+      }
   }
-
   return(out)
 }
