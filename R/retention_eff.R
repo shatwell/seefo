@@ -3,14 +3,14 @@
 #' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 according to Hilde 2003 and Generalized Additive Model (GAM).
 #'
 #'
-#' @param data Must be a dataframe with columns: date(POSIXct), variable (character), value (numeric), in_outlet (character) and tributary (character)
+#' @param data Must be a dataframe with columns: `date` ("yyyy-mm-dd" or POSIX format), `variable` (character), `value` (numeric), `in_outlet` (character) and `tributary` (character)
 #' @param start.year Numeric length 1
 #' @param end.year Numeric length 1
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
 #' @details Input data frame must consist of:
-#' date must be mm/dd/yyyy format;
+#' date must be "YYYY-MM-DD" or POSIX format;
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
 #' in_outlet is a character vector naming "inflow" or "outflow";
@@ -23,9 +23,10 @@
 #' @examples
 #' #Load it as binary data for the example
 #' \dontrun{
-#' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
+#' data(ret_eff_data)
 #' methods <- c("method1","method2","GAM.load")
-#' retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+#' out <- retention_eff(ret_eff_data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+#' head(out)
 #' }
 #'
 #' @export
@@ -38,10 +39,10 @@ retention_eff <- function(data, methods, start.year, end.year){
       stop("Methods must be one of: method1, method2 or GAM.load")
     }
   }
-  data <- data[data$year>=start.year & data$year<=end.year,]
-  #data$date <- lubridate::mdy(data$date)
+  data$date <- as.POSIXct(data$date)
   data$doy <- lubridate::yday(data$date)
   data$year <- lubridate::year(data$date)
+  data <- data[data$year>=start.year & data$year<=end.year,]
   my.summary.loads <- data.frame(NULL)
   my.inlets <- levels(as.factor(data$in_outlet))
   my.tributaries <- levels(as.factor(data$tributary))
