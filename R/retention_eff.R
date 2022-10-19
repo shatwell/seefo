@@ -24,8 +24,9 @@
 #' #Load it as binary data for the example
 #' \dontrun{
 #' data(ret_eff_data)
-#' methods <- c("method1","method2","GAM.load")
-#' out <- retention_eff(ret_eff_data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+#' # methods <- c("method1","method2","GAM.load")
+#' out <- retention_eff(ret_eff_data, start.year=2000, end.year=2019,
+#'   methods=c("method1","method2","GAM.load"))
 #' head(out)
 #' }
 #'
