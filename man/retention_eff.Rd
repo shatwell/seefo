@@ -7,7 +7,7 @@
 retention_eff(data, methods, start.year, end.year)
 }
 \arguments{
-\item{data}{Must be a dataframe with columns: date(POSIXct), variable (character), value (numeric), in_outlet (character) and tributary (character)}
+\item{data}{Must be a dataframe with columns: \code{date} ("yyyy-mm-dd" or POSIX format), \code{variable} (character), \code{value} (numeric), \code{in_outlet} (character) and \code{tributary} (character)}
 
 \item{methods}{Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")}
 
@@ -16,14 +16,14 @@ retention_eff(data, methods, start.year, end.year)
 \item{end.year}{Numeric length 1}
 }
 \value{
-A dataframe with annual load and retention efficiency for each nutrient
+A list containing 2 dataframes: annual load and retention efficiency
 }
 \description{
 Calculates the nutrient load in tons/year using Standard Method 1 and 2 according to Hilde 2003 and Generalized Additive Model (GAM).
 }
 \details{
 Input data frame must consist of:
-date must be mm/dd/yyyy format;
+date must be "YYYY-MM-DD" or POSIX format;
 variable is a character vector with nutrient's name;
 value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
 in_outlet is a character vector naming "inflow" or "outflow";
@@ -32,9 +32,10 @@ tributary is a character vector naming the pre-dams.
 \examples{
 #Load it as binary data for the example
 \dontrun{
-data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
+data(ret_eff_data)
 methods <- c("method1","method2","GAM.load")
-retention_eff(data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+out <- retention_eff(ret_eff_data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+head(out)
 }
 
 }
