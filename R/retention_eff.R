@@ -1,96 +1,48 @@
 #' @title Nutrients load and retention efficiency calculator
 #'
-#' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 acoording to Hilde 2003 and Generalized Additive Model (GAM).
+#' @description Calculates the nutrient load in tons/year using Standard Method 1 and 2 according to Hilde 2003 and Generalized Additive Model (GAM).
 #'
 #'
-#' @param data Must be a dataframe consisting of date, variable, value, in_outlet and tributary
-#' @param startyear Numeric length 1
-#' @param endyear Numeric length 1
+#' @param data Must be a dataframe with columns: `date` ("yyyy-mm-dd" or POSIX format), `variable` (character), `value` (numeric), `in_outlet` (character) and `tributary` (character)
+#' @param start.year Numeric length 1
+#' @param end.year Numeric length 1
 #' @param methods Vector containing one or more of the three available methods ("GAM.load", "method1", "method2")
 #'
 #'
-#' @details Needs lubridate and mgcv packages. Input dataframe must consist of:
-#' date must be mm/dd/yyyy format;
+#' @details Input data frame must consist of:
+#' date must be "YYYY-MM-DD" or POSIX format;
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
 #' in_outlet is a character vector naming "inflow" or "outflow";
 #' tributary is a character vector naming the pre-dams.
 #'
 #'
-#' @return A dataframe with annual load and retention efficiency for each nutrient
-#' @author Karsten Rinke and Taynara Fernandes
+#' @return A list containing 2 dataframes: annual load and retention efficiency
+#' @author Karsten Rinke, Taynara Fernandes and Tom Shatwell
 #'
 #' @examples
-#' it should be loaded as binary into/data for the example
+#' #Load it as binary data for the example
 #' \dontrun{
-#' data <- read.table("data/retention_eff.csv", header=T, sep=",", dec=".") #.rda
-#' methods <- c("method1","method2", "GAM.load")
-#' startyear=2000
-#' endyear=2017
+#' data(ret_eff_data)
+#' methods <- c("method1","method2","GAM.load")
+#' out <- retention_eff(ret_eff_data, start.year=2000, end.year=2019, methods=c("method1","method2","GAM.load"))
+#' head(out)
 #' }
 #'
 #' @export
 #
 
-#defining 3 functions that do the different calculations
-load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
-  mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
-  myGAM <-  mgcv::gam(concentration ~ s(year)+s(doy, bs="cc")+s(discharge), data=mydata)
-  dev.expl <- summary(myGAM)$dev.expl
-  if(GOF){print(dev.expl)}
-  predicted <- data.frame(times = hydrology$times,
-                          Q     = hydrology$discharge,
-                          year  = hydrology$year,
-                          pred.c= predict.gam(myGAM,
-                                              newdata = data.frame(year=hydrology$year,
-                                                                   doy =hydrology$doy,
-                                                                   discharge= hydrology$discharge)))
-  if(sum(is.na(predicted$pred.c))>0){print("warning, there are NAs in GAM predictions")}
-
-  predicted$daily.load <- predicted$pred.c*predicted$Q*3600*24 *1e-6 #in t/d
-  yearly.load <- aggregate(predicted$daily.load, by=list(predicted$year),sum)
-  names(yearly.load) <- c("year","load.tons")
-  return(yearly.load)
-}
-
-#standard method 1
-load.method1 <- function(year, discharge, concentration){
-
-  daily.loads.measured <- discharge * concentration *3600*24*1e-6 #in t/d
-  average.daily.loads  <- aggregate(daily.loads.measured, by=list(year), mean)
-  names(average.daily.loads) <- c("year","mean.daily.load.tons")
-  yearly.loads <- data.frame(year = average.daily.loads$year,
-                             yearly.load.tons = average.daily.loads$mean.daily.load.tons*365)
-  return(yearly.loads)
-}
-
-#standard method 2 (Q-weighting)
-load.method2 <- function(hydrology, year, discharge, concentration){
-  loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
-
-  mean.sampled.Q <- aggregate(discharge, by=list(year), mean)
-  names(mean.sampled.Q) <- c("year", "mean.sampled.Q")
-
-  mean.overall.Q <- aggregate(hydrology$discharge, by=list(hydrology$year), mean)
-  names(mean.overall.Q) <- c("year", "mean.overall.Q")
-
-  correction.factor <- mean.overall.Q$mean.overall.Q/mean.sampled.Q$mean.sampled.Q
-
-
-  yearly.from.method2 <- data.frame(year=loads.from.method1$year,
-                                    yearly.load.tons=loads.from.method1$yearly.load.tons *
-                                      correction.factor)
-  return(yearly.from.method2)
-}
-
 retention_eff <- function(data, methods, start.year, end.year){
-  if(!methods%in%c("method1","method2","GAM.load")){
-    stop("Methods must be one of: method1, method2 or GAM.load")
+  met <- c("method1", "method2", "GAM.load")
+  for(i in 1:length(methods)) {
+    if(!methods[i] %in% met) {
+      stop("Methods must be one of: method1, method2 or GAM.load")
+    }
   }
-  data <- data[data$year>=start.year & data$year<=end.year,]
-  # data$date <- lubridate::mdy(data$date)
+  data$date <- as.POSIXct(data$date)
   data$doy <- lubridate::yday(data$date)
   data$year <- lubridate::year(data$date)
+  data <- data[data$year>=start.year & data$year<=end.year,]
   my.summary.loads <- data.frame(NULL)
   my.inlets <- levels(as.factor(data$in_outlet))
   my.tributaries <- levels(as.factor(data$tributary))
@@ -109,7 +61,7 @@ retention_eff <- function(data, methods, start.year, end.year){
 
         the.result <- data.frame(NULL)
 
-        #we have to add the discharge Q to all measurements of the current variable in my.cq
+        #add the discharge Q to all measurements of the current variable in my.cq
         my.cq$Q <- my.Q$value[match(my.cq$date,my.Q$date)]
         if("GAM.load" %in% methods){
           res.GAM <- load.GAM(hydrology=data.frame(times=my.Q$date,
@@ -118,21 +70,24 @@ retention_eff <- function(data, methods, start.year, end.year){
                                                    discharge=my.Q$value),
                               year=my.cq$year, doy=my.cq$doy, discharge=my.cq$Q,
                               concentration=my.cq$value, GOF=T)
-          the.result <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
+          the.result.gam <- data.frame(year = res.GAM$year, GAM.load = res.GAM$load.tons)
         }
         if("method1" %in% methods){
           res.method1 <- load.method1(year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-          the.result <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
+          the.result.1 <- data.frame(year = res.method1$year, method1 = res.method1$yearly.load.tons)
 
         }
         if("method2" %in% methods){
           res.method2 <- load.method2(hydrology=data.frame(year=my.Q$year,
                                                            discharge=my.Q$value),
                                       year=my.cq$year, discharge=my.cq$Q, concentration=my.cq$value)
-          the.result$method2 <- res.method2$yearly.load.tons[match(the.result$year, res.method2$year)]
+          the.result.2 <- data.frame(year=res.method2$year, method2 = res.method2$yearly.load.tons)
         }
 
         #adding the other relevant information into the.result
+        the.result <- rbind(the.result, the.result.1)
+        df_list <- list(the.result, the.result.2, the.result.gam)
+        the.result <- reshape::merge_recurse(df_list)
         the.result$inflow   <- this.inflow
         the.result$variable <- this.var
         the.result$in_outlet <- this.outlet
@@ -174,8 +129,64 @@ retention_eff <- function(data, methods, start.year, end.year){
       }
     }
   }
-#figure out a way of putting these 2 tables together
-   out <- full_join(my.summary.loads, efficiency, by="year")
+  result <- rep("Retention Efficiency (%)", (nrow = length(efficiency$year)))
+  efficiency <- cbind(efficiency, result)
+
+  result.load <- rep("Load (ton/year)", (nrow = length(my.summary.loads$year)))
+  my.summary.loads <- cbind(my.summary.loads, result.load)
+
+
+   out <- (list(my.summary.loads, efficiency))
    return(out)
 }
 
+#defining 3 functions that do the different calculations
+load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
+  mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
+  myGAM <-  mgcv::gam(concentration ~ s(year, k=5)+s(doy, bs="cc")+s(discharge), data=mydata)
+  dev.expl <- summary(myGAM)$dev.expl
+  if(GOF){print(dev.expl)}
+  predicted <- data.frame(times = hydrology$times,
+                          Q     = hydrology$discharge,
+                          year  = hydrology$year,
+                          pred.c= mgcv::predict.gam(myGAM,
+                                              newdata = data.frame(year=hydrology$year,
+                                                                   doy =hydrology$doy,
+                                                                   discharge= hydrology$discharge)))
+  if(sum(is.na(predicted$pred.c))>0){print("warning, there are NAs in GAM predictions")}
+
+  predicted$daily.load <- predicted$pred.c*predicted$Q*3600*24 *1e-6 #in t/d
+  yearly.load <- stats::aggregate(predicted$daily.load, by=list(predicted$year),sum)
+  names(yearly.load) <- c("year","load.tons")
+  return(yearly.load)
+}
+
+#standard method 1
+load.method1 <- function(year, discharge, concentration){
+
+  daily.loads.measured <- discharge * concentration *3600*24*1e-6 #in t/d
+  average.daily.loads  <- stats::aggregate(daily.loads.measured, by=list(year), mean)
+  names(average.daily.loads) <- c("year","mean.daily.load.tons")
+  yearly.loads <- data.frame(year = average.daily.loads$year,
+                             yearly.load.tons = average.daily.loads$mean.daily.load.tons*365)
+  return(yearly.loads)
+}
+
+#standard method 2 (Q-weighting)
+load.method2 <- function(hydrology, year, discharge, concentration){
+  loads.from.method1 <- load.method1(year=year, discharge=discharge, concentration=concentration)
+
+  mean.sampled.Q <- stats::aggregate(discharge, by=list(year), mean)
+  names(mean.sampled.Q) <- c("year", "mean.sampled.Q")
+
+  mean.overall.Q <- stats::aggregate(hydrology$discharge, by=list(hydrology$year), mean)
+  names(mean.overall.Q) <- c("year", "mean.overall.Q")
+
+  correction.factor <- mean.overall.Q$mean.overall.Q/mean.sampled.Q$mean.sampled.Q
+
+
+  yearly.from.method2 <- data.frame(year=loads.from.method1$year,
+                                    yearly.load.tons=loads.from.method1$yearly.load.tons *
+                                      correction.factor)
+  return(yearly.from.method2)
+}
