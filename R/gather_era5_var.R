@@ -162,7 +162,7 @@ gather_era5_var <- function(namestrings=c(".nc$"), varid, lon, lat,
 
   if(nrow(out) > (difftime(out[nrow(out),"dt"],
                            out[1,"dt"], units="hour")+1)) {
-    out <- aggregate(val~dt, data=out, FUN=mean)
+    out <- stats::aggregate(val~dt, data=out, FUN=mean)
     out$dt <- as.POSIXct(out$dt,tz="UTC")
     if(nrow(out) == (difftime(out[nrow(out),"dt"],
                               out[1,"dt"], units="hour")+1)) {
