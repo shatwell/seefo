@@ -10,7 +10,12 @@ Authors@R: c(
     person(given = "Taynara",
            family = "de Souza Fernandes",
            role = c("aut"),
-           email = "taynara.fernandes@ufz.de")
+           email = "taynara.fernandes@ufz.de"),
+    person(given = "Karsten",
+           family = "RInke",
+           role = c("aut"),
+           email = "karsten.rinke@ufz.de",
+           comment = c(ORCID = "0000-0003-0864-6722"))
            )
 Maintainer: Tom Shatwell <tom.shatwell@ufz.de>
 Description: A collection of useful tools for lake research. These tools include: calculating ice and stratification phenology, reading raw data files from sondes, calculating water density and leap years, calculating volume-weighted mean using hyspographic information, interpolating to fixed depth grids or daily values.
@@ -20,7 +25,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-Imports: plot3D, data.table, ncdf4, lubridate, mgcv, dplyr
+Imports: plot3D, data.table, ncdf4, lubridate, mgcv, dplyr, reshape
 Suggests: 
     MASS,
     testthat (>= 3.0.0)
