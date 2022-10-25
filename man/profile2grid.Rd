@@ -5,32 +5,32 @@
 \title{Interpolation of sonde profiles to a grid of fixed depths}
 \usage{
 profile2grid(
-  data,
   datetime,
   depth,
   value,
   outdepths = NULL,
   rule = c(2, 1),
-  dropNAs = FALSE
+  dropNAs = FALSE,
+  wide = TRUE
 )
 }
 \arguments{
-\item{data}{A data.frame containing the profile data to interpolate, containing columns of at least datetime, depth and values.}
+\item{datetime}{A vector of times that are identical within a profile.}
 
-\item{datetime}{The name of the column containing the datetimes (character).}
+\item{depth}{A vector of depths (numeric) corresponding to each measurement.}
 
-\item{depth}{The name of the column containing the depths (character).}
-
-\item{value}{The name of the column containing values to be interpolated (character).}
+\item{value}{A vector of measurements (numeric).}
 
 \item{outdepths}{The interpolation depths, which defines the desired vertical grid (numeric vector). If \code{NULL}, the function tries to choose suitable depths.}
 
-\item{rule}{The rule defining how to interpolate outside the data range, as defined in the function \code{approxfun()} function.
-Copied again: an integer (of length 1 or 2) describing how interpolation is to take place outside the interval \verb{[min(x), max(x)]}.
+\item{rule}{The rule defining how to interpolate outside the data range, as defined in the function \code{approxfun()} function:
+an integer (of length 1 or 2) describing how interpolation is to take place outside the interval \verb{[min(x), max(x)]}.
 If rule is 1 then NAs are returned for such points and if it is 2, the value at the closest data extreme is used.
 Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.}
 
-\item{dropNAs}{Should bad profiles be dropped (\code{TRUE}) or retained as NAs (\code{FALSE}) (logical).}
+\item{dropNAs}{Should bad profiles be dropped (\code{TRUE}) or retained as NAs (\code{FALSE}) (logical). Only when \code{wide = TRUE}. NAs are dropped automatically in long format.}
+
+\item{wide}{Should the output be a matrix in wide format (\code{TRUE}) or a data.frame in long format (\code{FALSE})?}
 }
 \value{
 A \code{matrix} containing the interpolated profile data, nrow = the length of outdepths, and ncol=the number of profiles.
@@ -38,20 +38,19 @@ The attributes contain some details including the \code{outdepths} and unique \c
 }
 \description{
 Interpolates vertical profile data (typically from a sonde or profiling system) to defined depths.
-It uses \code{data.table} to more quickly and efficiently process large datasets.
 }
 \details{
-The function takes as input a table in long format, with columns for a timestamp, depth, and measured values.
+The function takes as input data (usually from a data.frame) in long format.
 The input data is typically data of multiple profiles from a sonde with one measurement in each row.
 Each measurement requires a timestamp (\code{datetime}) that uniquely associates it to a profile.
-In principle the \code{datetime} column could contain anything that uniquely identifies each profile, but this is commonly a timestamp.
+In principle \code{datetime} could contain anything that uniquely identifies each profile, but this is commonly a timestamp.
 Therefore the times from raw sonde data may need to be \code{cut()} first. Profiles with less than 5 non-NA values are not interpolated.
 }
 \examples{
 \dontrun{
 
-depths <- c(0,2,4,6,8,10, 15, 20)
-times <- c("2005-08-20", "2005-09-02", "2005-09-25")
+depths <- rep(c(0,2,4,6,8,10, 15, 20), 3)
+times <- rep(c("2005-08-20", "2005-09-02", "2005-09-25"), each=8)
 
 temps <- c(
   30.8, 30.5, 30.4, 30.3, 29.7, 28.8, 27.8, 27.3,
@@ -59,25 +58,30 @@ temps <- c(
   30.6, 30.6, 30.5, 30.0, 29.7, 29.2, 27.7, 27.3
   )
 
-dat <- data.frame(
-  time = rep(times, each=length(depths)),
-  depth=rep(depths, length(times)),
-  temp=temps)
+out <- profile2grid(datetime=times, depth=depths,
+  value=temps)
 
-out <- profile2grid(data=dat, datetime="time", depth="depth",
-  value="temp")
+# Usefule data is stored in the attributes (the times and interpolated depths)
+attributes(out)
 
 # set interpolation depths manually
-out <- profile2grid(data=dat, datetime="time", depth="depth",
-  value="temp", outdepths=seq(0,17,0.5))
+out <- profile2grid(datetime=times, depth=depths,
+  value=temps, outdepths=seq(0,17,0.5))
 
-# works also with any identifier instead of a date
-dat$time <- rep(c("A","B","C"), each=length(depths))
+# works also with any unique identifier instead of a date
+times_new <- rep(c("A","B","C"), each=8)
 
-out <- profile2grid(data=dat, datetime="time", depth="depth",
-  value="temp")
+out <- profile2grid(datetime=times_new, depth=depths,
+  value=temps)
 
+# Note dt in the attributes
 attributes(out)
+
+# output in long format (NAs are excluded in output)
+
+out <- profile2grid(datetime=times, depth=depths,
+  value=temps, wide=FALSE)
+
 }
 
 }
