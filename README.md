@@ -50,7 +50,7 @@ The package contains the following functions:
 
 The seefo package helps you read raw sensor data on the limnophysics directory. There are
 currently functions to read data from our CTM, BBE and ixx (e.g. i172) sondes. Additional
-functions for other sondes (e.g. EXOs or RBRs) will follow.
+functions for other sondes (e.g. EXOs or RBRs) will hopefully follow.
 
 ``` r
 library(seefo)
