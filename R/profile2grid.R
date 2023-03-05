@@ -125,6 +125,9 @@ profile2grid <- function(datetime, depth, value,
       if(dropNAs) {
         out <- out[,retain]
         attributes(out)$dt <- dates[retain]
+        attributes(out)$outdepths <- outdepths
+        attributes(out)$NA_profiles <- dates[drop]
+
       }
     }
   } else {
