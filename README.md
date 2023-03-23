@@ -68,6 +68,7 @@ multiple netcdf download files for a given location\
 `rho_water()` calculates water density\
 `leap()` is a helper function that determines if a year is a leap year
 `solar2PAR()` converts solar shortwave radiation (W/m2) into PAR (umol/m2/s)
+`extinction_coeff()` calculates the light extinction coefficient from underwater PAR measurements
 
 ## Examples
 
