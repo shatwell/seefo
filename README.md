@@ -4,7 +4,7 @@ editor_options:
     wrap: 72
 ---
 
-# seefo: an R package for data analyses in lake research
+# seefo: an R package for data analysis in lake research
 
 <!-- badges: start -->
 
@@ -66,9 +66,9 @@ depth in lakes\
 multiple netcdf download files for a given location\
 `dewpoint2humidity()` converts dewpoint temperature to humidity\
 `rho_water()` calculates water density\
-`leap()` is a helper function that determines if a year is a leap year
-`solar2PAR()` converts solar shortwave radiation (W/m2) into PAR (umol/m2/s)
-`extinction_coeff()` calculates the light extinction coefficient from underwater PAR measurements
+`leap()` is a helper function that determines if a year is a leap year\
+`solar2PAR()` converts solar shortwave radiation (W/m2) into PAR (umol/m2/s)\
+`extinction_coeff()` calculates the light extinction coefficient from underwater PAR measurements\
 
 ## Examples
 
