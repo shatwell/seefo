@@ -36,10 +36,20 @@ get_profile_info <- function (filename) {
     filename <- paste(splitted[1:l-1],sep=".")
     splitted <- strsplit(x=filename, split="_")[[1]]
     l <- length(splitted)
+    d <- grep(pattern ="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]",
+              splitted) # matches date
     loc <- splitted[1]
-    if(l>1) date <- splitted[2]
-    if(l>2) pr_no <- splitted[3]
-    if(l>3) comment <- paste(splitted[4:l],sep="_")
+    if(l>1) date <- splitted[d]
+    if(l>2 && d==2) {
+      p <- 3
+      pr_no <- splitted[p]
+    }
+    if(l>2 && d!=2) {
+      p <- grep("^\\d{1,2}$",splitted) # (?:\d{1}){1,2}  ^[0-9]{1,2}
+      pr_no <- splitted[p]
+    }
+    if(l>3) comment <- paste(splitted[(2:l)[!2:l %in% c(p,d)]],
+                             collapse="_")
   }
   return(c(loc=loc,date=date,pr_no=pr_no,ext=ext,comment=comment))
 }
