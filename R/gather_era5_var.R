@@ -19,23 +19,23 @@
 #'
 #' | **ERA5 long name**                                       | **ERA5 shortname** | **Units** |
 #' |----------------------------------------------------------|----------------|-------|
-#' |surface_solar_radiation_downwards                         | ssrd           | ??    |
-#' |surface_solar_radiation_downward_clear_sky                | ssrdc          | ??    |
-#' |mean_surface_downward_short_wave_radiation_flux           | msdwswrf       | ??    |
-#' |mean_surface_downward_short_wave_radiation_flux_clear_sky | msdwswrfcs     | ??    |
-#' |mean_surface_downward_long_wave_radiation_flux            | msdwlwrf       | W/m^2 |
-#' |surface_thermal_radiation_downwards                       | ??             | J/m^2 |
+#' |surface_solar_radiation_downwards                         | ssrd           | J m**-2    |
+#' |surface_solar_radiation_downward_clear_sky                | ssrdc          | J m**-2    |
+#' |mean_surface_downward_short_wave_radiation_flux           | msdwswrf       | W m**-2    |
+#' |mean_surface_downward_short_wave_radiation_flux_clear_sky | msdwswrfcs     | W m**-2    |
+#' |mean_surface_downward_long_wave_radiation_flux            | msdwlwrf       | W m**-2 |
+#' |surface_thermal_radiation_downwards                       | strd           | J/m^2 |
 #' |2m_temperature                                            | t2m            | K     |
 #' |surface_pressure                                          | ??             | Pa    |
-#' |2m_dewpoint_temperature                                   | ??             | K     |
+#' |2m_dewpoint_temperature                                   | d2m            | K     |
 #' |10m_u_component_of_wind                                   | u10            | m/s   |
 #' |10m_v_component_of_wind                                   | v10            | m/s   |
-#' |mean_total_precipitation_rate                             | ??             |kg m**-2 s**-1|
+#' |mean_total_precipitation_rate                             | mtpr             | kg m**-2 s**-1|
 #' |total_precipitation                                       | ??             | m     |
-#' |total_cloud_cover                                         | tcc            | -     |
-#' |low_cloud_cover                                           | lcc            | -     |
-#' |medium_cloud_cover                                        | mcc            | -     |
-#' |high_cloud_cover                                          | hcc            | -     |
+#' |total_cloud_cover                                         | tcc            | 0..1     |
+#' |low_cloud_cover                                           | lcc            | 0..1     |
+#' |medium_cloud_cover                                        | mcc            | 0..1     |
+#' |high_cloud_cover                                          | hcc            | 0..1     |
 #' |cloud_base_height                                         | cbh            | m     |
 #'
 #' @return A data.frame containing the datetime and variable values
