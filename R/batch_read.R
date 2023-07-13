@@ -43,6 +43,9 @@
 #' i72 <- batch_read(sonde="ixx", path=loc)
 #' head(i72)
 #'
+#' rbr <- batch_read(sonde="rbr", path=paste0(loc,"/RBR"))
+#' head(rbr)
+#'
 #' }
 #'
 #' @export
@@ -67,6 +70,9 @@ batch_read <- function(sonde, path, fnames="autosearch", keep="all",
 
   filenames <- list.files(path = path,
                           full.names = TRUE, recursive = recursive)
+  if(length(filenames)==0) {
+    warning("No files to read!")
+  }
   if(sonde=="ctm") {
     pat <- ".CTM"
     func <- read_ctm
@@ -76,8 +82,11 @@ batch_read <- function(sonde, path, fnames="autosearch", keep="all",
   } else if(sonde == "ixx") {
     pat <- ".i[*0-9]"
     func <- read_ixx
+  } else if(sonde == "rbr") {
+    pat <- ".RBR"
+    func <- read_rbr
   } else {
-    stop("Sonde name must be one of 'ctm' 'bbe', 'ixx'.")
+    stop("Sonde name must be one of 'ctm' 'bbe', 'ixx', 'rbr'.")
   }
 
   if(fnames[1]=="autosearch") fnames <- filenames[grep(pattern = pat, x = filenames)]
