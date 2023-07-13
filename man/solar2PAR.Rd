@@ -13,7 +13,7 @@ solar2PAR(solar, parfrac = 0.5, reflect = 0.1, joule2umol = 4.56)
 
 \item{reflect}{The loss due to reflection and backscatter at the surface of the water (numeric)}
 
-\item{joule2umol}{Conversion factor for solar radiation to PAR}
+\item{joule2umol}{Conversion factor for solar radiation to PAR with units umol per Joule (numeric)}
 }
 \value{
 A numeric vector the same length as \code{solar}.
@@ -24,7 +24,7 @@ Converts solar (shortwave) radiation in W/m2 above the water surface into PAR (p
 \details{
 This function helps to convert solar radiation usually available from weather stations into PAR.
 Solar radiation should be in W/m2. The assumptions are that 50\% of solar radiation is PAR (400 - 700 nm),
-and 10 \% of that is lost at the water surface due to reflection.
+and 10\% of that is lost at the water surface due to reflection.
 The conversion to micromoles of photons (400-700) depends on the spectrum but the default value is typical for sunlight.
 }
 \examples{

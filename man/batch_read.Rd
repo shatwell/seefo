@@ -62,6 +62,9 @@ head(bbe)
 i72 <- batch_read(sonde="ixx", path=loc)
 head(i72)
 
+rbr <- batch_read(sonde="rbr", path=paste0(loc,"/RBR"))
+head(rbr)
+
 }
 
 }

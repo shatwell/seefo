@@ -46,23 +46,23 @@ This function will search files that match a variable name string close to a giv
 \details{
 The location and variable name are kept in the attributes of the output. Pad_missings can be useful if a variable can take on missing values, e.g. cloud base height when there is no cloud. Padding missing values can mask problems like discontinuous time series, so choose FALSE if for safety if the value cannot be NA.\tabular{lll}{
    \strong{ERA5 long name} \tab \strong{ERA5 shortname} \tab \strong{Units} \cr
-   surface_solar_radiation_downwards \tab ssrd \tab ?? \cr
-   surface_solar_radiation_downward_clear_sky \tab ssrdc \tab ?? \cr
-   mean_surface_downward_short_wave_radiation_flux \tab msdwswrf \tab ?? \cr
-   mean_surface_downward_short_wave_radiation_flux_clear_sky \tab msdwswrfcs \tab ?? \cr
-   mean_surface_downward_long_wave_radiation_flux \tab msdwlwrf \tab W/m^2 \cr
-   surface_thermal_radiation_downwards \tab ?? \tab J/m^2 \cr
+   surface_solar_radiation_downwards \tab ssrd \tab J m**-2 \cr
+   surface_solar_radiation_downward_clear_sky \tab ssrdc \tab J m**-2 \cr
+   mean_surface_downward_short_wave_radiation_flux \tab msdwswrf \tab W m**-2 \cr
+   mean_surface_downward_short_wave_radiation_flux_clear_sky \tab msdwswrfcs \tab W m**-2 \cr
+   mean_surface_downward_long_wave_radiation_flux \tab msdwlwrf \tab W m**-2 \cr
+   surface_thermal_radiation_downwards \tab strd \tab J/m^2 \cr
    2m_temperature \tab t2m \tab K \cr
    surface_pressure \tab ?? \tab Pa \cr
-   2m_dewpoint_temperature \tab ?? \tab K \cr
+   2m_dewpoint_temperature \tab d2m \tab K \cr
    10m_u_component_of_wind \tab u10 \tab m/s \cr
    10m_v_component_of_wind \tab v10 \tab m/s \cr
-   mean_total_precipitation_rate \tab ?? \tab kg m**-2 s**-1 \cr
+   mean_total_precipitation_rate \tab mtpr \tab kg m**-2 s**-1 \cr
    total_precipitation \tab ?? \tab m \cr
-   total_cloud_cover \tab tcc \tab - \cr
-   low_cloud_cover \tab lcc \tab - \cr
-   medium_cloud_cover \tab mcc \tab - \cr
-   high_cloud_cover \tab hcc \tab - \cr
+   total_cloud_cover \tab tcc \tab 0..1 \cr
+   low_cloud_cover \tab lcc \tab 0..1 \cr
+   medium_cloud_cover \tab mcc \tab 0..1 \cr
+   high_cloud_cover \tab hcc \tab 0..1 \cr
    cloud_base_height \tab cbh \tab m \cr
 }
 }
