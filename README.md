@@ -51,6 +51,7 @@ data.frame\
 `read_ctm()` reads a ctm sonde raw datafile\
 `read_bbe()` reads a bbe sonde raw datafile\
 `read_ixx()` reads an ixx (e.g. i172) sonde raw datafile\
+`read_rbr()` reads an RBR sonde raw datafile\
 `clean_profile()` cleans up a profile by removing unwanted values\
 `get_profile_info()` parses the raw sonde dataname to extract
 information (used in other functions)\
