@@ -47,7 +47,7 @@ The \code{header} can include \code{c("no","press","temp","cond","cond_hi","sali
 \examples{
 \dontrun{
 pr_loc <- system.file("extdata", package="seefo")
-pr_name <- file.path(pr_loc,  "profiles","RBR","hermeckes_kiesloch_1_20230511_depth.RBR808")
+pr_name <- file.path(pr_loc,  "profiles","RBR","somelake_1_20230511_depth.RBR808")
 pr1 <- read_rbr(pr_name)
 head(pr1)
 pr1a <- read_rbr(pr_name,
