@@ -30,7 +30,7 @@
 #' @examples
 #' \dontrun{
 #' pr_loc <- system.file("extdata", package="seefo")
-#' pr_name <- file.path(pr_loc,  "profiles","hermeckes_kiesloch_1_20230511_depth.RBR808")
+#' pr_name <- file.path(pr_loc,  "profiles","RBR",somelake_1_20230511_depth.RBR808")
 #' pr1 <- read_rbr(pr_name)
 #' head(pr1)
 #' pr1a <- read_rbr(pr_name,
@@ -41,31 +41,8 @@
 #'
 #' @export
 
-# read_rbr
-# filename <- "hermeckes_kiesloch_1_20230511_depth.RBR808"
-# newpath <- "inst/extdata/profiles/RBR"
-# filename <- file.path(newpath,filename)
-
 read_rbr <- function(filename, keep = "all", header="auto",
                      TZ="UTC", clean=TRUE, ...) {
-
-  # keep <-   c(
-  #     "cond",
-  #     "temp",
-  #     "press_dbar",
-  #     "fluor",
-  #     "do_sensor_temp",
-  #     "do_umol_l",
-  #     "ph",
-  #     "turb",
-  #     "s_press",
-  #     "depth",
-  #     "salin",
-  #     "soundspeed",
-  #     "cond_speci",
-  #     "do_sat",
-  #     "density"
-  #   )
 
   info <- get_profile_info(filename)
 
