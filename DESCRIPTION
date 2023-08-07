@@ -1,6 +1,6 @@
 Package: seefo
 Title: Useful Tools for The Lake Research Department at UFZ
-Version: 0.9.3.0001
+Version: 0.9.3.0003
 Authors@R: c(
     person(given = "Tom",
            family = "Shatwell",
