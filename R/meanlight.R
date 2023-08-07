@@ -105,15 +105,6 @@
 #'
 #' @export
 
-
-
-# hypso <- fread("raw/volume-elevation.csv")
-# hypso <- fread("raw/bathy.txt")
-# hypso[,elev := 338 + max(depth) - depth]
-#
-# Az <- approxfun(x = hypso$elev, y = hypso$area, method = "linear")
-
-
 meanlight <- function(I0, kd, bot, areafun=NULL, lev=NULL, top=0, len=101) {
   if(length(kd)==1 && length(I0)>1) {
     kd <- rep(kd, length(I0))
@@ -151,21 +142,23 @@ meanlight <- function(I0, kd, bot, areafun=NULL, lev=NULL, top=0, len=101) {
     if(length(I0)!=length(lev)) {
       stop("lev must have length either 1 (constant water level) or have the same length as I0, kd and bot")
     }
-
+    # depths of layer interfaces
     # zint <- sapply(bot, function(x) {seq(0,x,length.out=len+1)})
     zint <- mapply(function(x,y) {seq(x,y,length.out=len+1)}, top, bot)
+
+    # light just below water surface as matrix
     I0s <- matrix(I0, nrow=len, ncol=length(I0), byrow=TRUE)
+
+    # extinction coefficients as matrix
     kds <- matrix(kd, nrow=len, ncol=length(kd), byrow=TRUE)
+    # convert levels to matrix
     levs <- matrix(lev, nrow=len, ncol=length(lev), byrow=TRUE)
-    dz <- diff(zint) # zint[2,] - zint[1,]
-    z <- (zint[-1,] - dz/2)
-    I <- I0s * exp(-kds * z)
-    A <- matrix(areafun(levs - z), nrow=len, ncol=length(lev))
-    Im <- colSums(I * A * dz) / colSums(A * dz)
+
+    dz <- diff(zint) #  thickensses of layers
+    z <- (zint[-1,] - dz/2) # depths of layer midpoints
+    I <- I0s * exp(-kds * z) # light at layer midpoints
+    A <- matrix(areafun(levs - z), nrow=len, ncol=length(lev)) # area at layer midpoints
+    Im <- colSums(I * A * dz) / colSums(A * dz) # volume weighted mean light from top to bot
   }
   return(Im)
 }
-
-
-# meanlight(I0 = PAR.surf, kd = extinction, top = 11, bot = 15,
-#           areafun = area_interp, lev = 420)
