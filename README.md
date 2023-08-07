@@ -70,6 +70,7 @@ multiple netcdf download files for a given location\
 `leap()` is a helper function that determines if a year is a leap year\
 `solar2PAR()` converts solar shortwave radiation (W/m2) into PAR (umol/m2/s)\
 `extinction_coeff()` calculates the light extinction coefficient from underwater PAR measurements\
+`meanlight()` calculates the mean underwater light in a water layer or column.\
 
 ## Examples
 
@@ -178,3 +179,44 @@ head(pr)
 
 h3mix(T=pr$temp, z=pr$press, plot=TRUE)
 ```
+
+### Calculating underwater light e.g. for photosynthesis analyses
+
+Calculate the extinction coefficient from PAR measurements at different depths:
+``` r
+depth <- c(0.75, 1.25)
+light <- c(1263, 957)
+
+Kd <- extinction_coeff(PAR=light, z=depth)
+Kd
+```
+Convert incoling solar radiation to PAR:
+
+``` r
+solar <- c(100, 200, 300) # W/m2
+
+PAR <- solar2PAR(c(100, 200, 300))
+PAR
+```
+
+Calculate mean underwater light in a layer or water column
+
+``` r
+incomingsolar <- c(300,240,340,295,400)
+
+# convert to PAR just below surface (umol/m2/s)
+PAR.surf <- seefo::solar2PAR(incomingsolar)
+
+# mixed layer depth (m)
+zmix <- c(8,7,6,5.5,4)
+
+# light attenuation coefficient (1/m)
+extinction <- c(0.55, 0.6, 0.48, 0.45, 0.4)
+
+data.frame(incomingsolar, PAR.surf, zmix, extinction)
+
+# calculate mean light
+meanlight(I0 = PAR.surf, kd = extinction, bot = zmix)
+```
+
+
