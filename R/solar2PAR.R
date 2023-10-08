@@ -13,6 +13,8 @@
 #' Solar radiation should be in W/m2. The assumptions are that 50% of solar radiation is PAR (400 - 700 nm),
 #' and 10% of that is lost at the water surface due to reflection.
 #' The conversion to micromoles of photons (400-700) depends on the spectrum but the default value is typical for sunlight.
+#' Units of output are [umol photons / m2 / s] unless you use a different conversion factor `joule2mol`.
+#' The conversion is `PAR = solar * parfrac * (1 - reflect) * joule2umol`.
 #'
 #' @return A numeric vector the same length as `solar`.
 #' @author Tom Shatwell
