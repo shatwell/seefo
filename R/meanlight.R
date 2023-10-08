@@ -120,10 +120,10 @@ meanlight <- function(I0, kd, bot, areafun=NULL, lev=NULL, top=0, len=101) {
            length(I0)!=length(top)))) {
     stop("kd, bot and top must be length 1 or same length as I0")
   }
-  if(any(top>bot)) {
+  if(any(top>bot, na.rm=TRUE)) {
     stop("bot must be greater than top")
   }
-  if(any(top!=0)) {
+  if(any(top!=0, na.rm=TRUE)) {
     I0 <- I0 * exp(-kd * top)
   }
 
@@ -144,7 +144,14 @@ meanlight <- function(I0, kd, bot, areafun=NULL, lev=NULL, top=0, len=101) {
     }
     # depths of layer interfaces
     # zint <- sapply(bot, function(x) {seq(0,x,length.out=len+1)})
-    zint <- mapply(function(x,y) {seq(x,y,length.out=len+1)}, top, bot)
+    zint <- mapply(function(x,y) {
+      if(anyNA(c(x,y))) {
+        out <- rep(NA,len+1)
+      } else {
+        out <- seq(x,y,length.out=len+1)
+      }
+      return(out)
+    }, top, bot)
 
     # light just below water surface as matrix
     I0s <- matrix(I0, nrow=len, ncol=length(I0), byrow=TRUE)
