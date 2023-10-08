@@ -4,7 +4,7 @@
 #' By default, it searches a given directory and all subdirectories for matching files for a given sonde type,
 #' cleans up the data, and returns it sorted and labelled.
 #'
-#' @param sonde Type of sonde. One of `"ctm"`,`"bbe"`,`"ixx"`.
+#' @param sonde Type of sonde. One of `"ctm"`,`"bbe"`,`"ixx"`, `"rbr"`.
 #' @param path The path to a directory in which to search for matching files. Used only if `fnames`== `"autosearch"`
 #' @param fnames The names of the files to read. Defaults to `"autosearch"`,
 #' in which case all filenames with an extension matching the sonde type will be read.
@@ -24,7 +24,7 @@
 #'
 #' @author Tom Shatwell
 #'
-#' @seealso \code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}
+#' @seealso \code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}},  \code{\link{read_rbr}},  \code{\link{read_ixx}}, \code{\link{clean_profile}}
 #'
 #' @examples
 #' \dontrun{
