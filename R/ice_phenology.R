@@ -74,6 +74,15 @@ ice_phenology <- function(H_ice, dates, NH=TRUE) {
   the_years <- as.POSIXlt(dates)$year+1900
   yrs <- unique(the_years)
   doys <- as.POSIXlt(dates)$yday # day of the year [0..364]
+  # see if there are any years with only one entry and remove them
+  if(any(table(the_years)==1)) {
+    rmyr <- as.numeric(names(which(table(the_years)==1)))
+    keep <-the_years!=rmyr
+    the_years <- the_years[keep]
+    yrs <- yrs[yrs!=rmyr]
+    doys <- doys[keep]
+    warning(paste("Removed year(s) with only one entry:",rmyr))
+  }
   # alternative counting from [-182 .. 182] (July 2/3) for ice
   # in northern hemisphere or strat in southern hemisphere
   alt_doys <- doys
@@ -208,3 +217,4 @@ ice_phenology <- function(H_ice, dates, NH=TRUE) {
 
   return(ice_out1)
 }
+
