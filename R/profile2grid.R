@@ -12,13 +12,14 @@
 #' Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.
 #' @param dropNAs Should bad profiles be dropped (`TRUE`) or retained as NAs (`FALSE`) (logical). Only when `wide = TRUE`. NAs are dropped automatically in long format.
 #' @param wide Should the output be a matrix in wide format (`TRUE`) or a data.frame in long format (`FALSE`)?
+#' @param minN Minimum number of non-NA values per profile to interpolate
 #'
 #' @details
 #' The function takes as input data (usually from a data.frame) in long format.
 #' The input data is typically data of multiple profiles from a sonde with one measurement in each row.
 #' Each measurement requires a timestamp (`datetime`) that uniquely associates it to a profile.
 #' In principle `datetime` could contain anything that uniquely identifies each profile, but this is commonly a timestamp.
-#' Therefore the times from raw sonde data may need to be `cut()` first. Profiles with less than 5 non-NA values are not interpolated.
+#' Therefore the times from raw sonde data may need to be `cut()` first. Profiles with less than `minN` non-NA values are not interpolated.
 #'
 #' @return A `matrix` containing the interpolated profile data, nrow = the length of outdepths, and ncol=the number of profiles.
 #' The attributes contain some details including the `outdepths` and unique `datetimes`.
@@ -68,7 +69,7 @@
 
 profile2grid <- function(datetime, depth, value,
                          outdepths=NULL, rule=c(2,1),
-                         dropNAs=FALSE, wide=TRUE) {
+                         dropNAs=FALSE, wide=TRUE, minN=5) {
   dat <- data.frame(dt=datetime, dep=depth, val=value)
   dat <- dat[order(dat$dt),]
   dates <- unique(dat[,"dt"])
@@ -97,7 +98,7 @@ profile2grid <- function(datetime, depth, value,
 
   func <- function(y) {
     dat1 <- subset(dat, dt==y)
-    if(sum(!is.na(dat1$val))<5) {
+    if(sum(!is.na(dat1$val))<minN) {
       stop("Not enough non-NA values to interpolate")
     } else {
       stats::approx(x = dat1$dep, y = dat1$val, xout = outdepths, rule=rule)$y
