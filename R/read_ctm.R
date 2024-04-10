@@ -43,7 +43,9 @@ read_ctm <- function(filename, keep="all", header="auto", TZ="UTC", clean=TRUE) 
     warning("File does not have a CTM extension, attempting anyway...")
   }
   top <- readLines(con = filename,n=50) # read the top 50 lines of the file
-  skip <- grep(pattern = "Datasets", x = top) +2 # skip to 2 lines after the "Datasets" header
+  skip <- suppressWarnings(
+    grep(pattern = "Datasets", x = top) +2 # skip to 2 lines after the "Datasets" header
+  )
 
   # header1 <- c("no","press","temp","cond","salin",
   #              "DO_sat","DO")
@@ -73,6 +75,15 @@ read_ctm <- function(filename, keep="all", header="auto", TZ="UTC", clean=TRUE) 
                   "DO_sat","DO","pH","turb","chla",
                   "BGAPE","BGAPC","sv",
                   "intD","intT")
+    }
+    if(ext == "CTM644") {
+      # header <- c(header1,header2, c("BGAPE","BGAPC","sv"), header3)
+      header <- c("no","press","temp","cond","salin",
+                  "DO_sat","DO","pH","turb","chla",
+                   "intD","intT")
+    }
+    if(!ext %in% c("CTM1143", "CTM644", "CTM102", "CTM294")) {
+      warning("Did not find the sonde (one of CTM1143, CTM644, CTM102, CTM294)")
     }
   }
 
