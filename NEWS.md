@@ -1,4 +1,4 @@
-# seefo 0.9.3.0006
+# seefo 0.9.3.0007
 
 * Added a `NEWS.md` file to track changes to the package.
 * Finally started numbering software versions.
@@ -7,3 +7,4 @@
 * 0.9.3.0004: fixed up some bugs in meanlight
 * 0.9.3.0005: added a new parameter to profile2grid()
 * 0.9.3.0006: Added CTM644 to sonde repertoir
+* 0.9.3.0007: Updated some units in the era5 functions

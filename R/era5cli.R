@@ -21,12 +21,12 @@
 #' |mean_surface_downward_long_wave_radiation_flux            | msdwlwrf       | W m**-2 |
 #' |surface_thermal_radiation_downwards                       | strd           | J/m^2 |
 #' |2m_temperature                                            | t2m            | K     |
-#' |surface_pressure                                          | ??             | Pa    |
+#' |surface_pressure                                          | sp             | Pa    |
 #' |2m_dewpoint_temperature                                   | d2m            | K     |
 #' |10m_u_component_of_wind                                   | u10            | m/s   |
 #' |10m_v_component_of_wind                                   | v10            | m/s   |
 #' |mean_total_precipitation_rate                             | mtpr             | kg m**-2 s**-1|
-#' |total_precipitation                                       | ??             | m     |
+#' |total_precipitation                                       | tp             | m     |
 #' |total_cloud_cover                                         | tcc            | 0..1     |
 #' |low_cloud_cover                                           | lcc            | 0..1     |
 #' |medium_cloud_cover                                        | mcc            | 0..1     |
