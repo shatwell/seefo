@@ -15,7 +15,7 @@ batch_read(
 )
 }
 \arguments{
-\item{sonde}{Type of sonde. One of \code{"ctm"},\code{"bbe"},\code{"ixx"}.}
+\item{sonde}{Type of sonde. One of \code{"ctm"},\code{"bbe"},\code{"ixx"}, \code{"rbr"}.}
 
 \item{path}{The path to a directory in which to search for matching files. Used only if \code{fnames}== \code{"autosearch"}}
 
@@ -69,7 +69,7 @@ head(rbr)
 
 }
 \seealso{
-\code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}}, \code{\link{clean_profile}}
+\code{\link{get_profile_info}},  \code{\link{read_bbe}},  \code{\link{read_ctm}},  \code{\link{read_rbr}},  \code{\link{read_ixx}}, \code{\link{clean_profile}}
 }
 \author{
 Tom Shatwell

@@ -11,7 +11,8 @@ profile2grid(
   outdepths = NULL,
   rule = c(2, 1),
   dropNAs = FALSE,
-  wide = TRUE
+  wide = TRUE,
+  minN = 5
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ Use, e.g., rule = 2:1, if the left and right side extrapolation should differ.}
 \item{dropNAs}{Should bad profiles be dropped (\code{TRUE}) or retained as NAs (\code{FALSE}) (logical). Only when \code{wide = TRUE}. NAs are dropped automatically in long format.}
 
 \item{wide}{Should the output be a matrix in wide format (\code{TRUE}) or a data.frame in long format (\code{FALSE})?}
+
+\item{minN}{Minimum number of non-NA values per profile to interpolate}
 }
 \value{
 A \code{matrix} containing the interpolated profile data, nrow = the length of outdepths, and ncol=the number of profiles.
@@ -44,7 +47,7 @@ The function takes as input data (usually from a data.frame) in long format.
 The input data is typically data of multiple profiles from a sonde with one measurement in each row.
 Each measurement requires a timestamp (\code{datetime}) that uniquely associates it to a profile.
 In principle \code{datetime} could contain anything that uniquely identifies each profile, but this is commonly a timestamp.
-Therefore the times from raw sonde data may need to be \code{cut()} first. Profiles with less than 5 non-NA values are not interpolated.
+Therefore the times from raw sonde data may need to be \code{cut()} first. Profiles with less than \code{minN} non-NA values are not interpolated.
 }
 \examples{
 \dontrun{
