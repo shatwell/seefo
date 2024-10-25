@@ -35,12 +35,12 @@ The location and variable name are kept in the attributes of the output.\tabular
    mean_surface_downward_long_wave_radiation_flux \tab msdwlwrf \tab W m**-2 \cr
    surface_thermal_radiation_downwards \tab strd \tab J/m^2 \cr
    2m_temperature \tab t2m \tab K \cr
-   surface_pressure \tab ?? \tab Pa \cr
+   surface_pressure \tab sp \tab Pa \cr
    2m_dewpoint_temperature \tab d2m \tab K \cr
    10m_u_component_of_wind \tab u10 \tab m/s \cr
    10m_v_component_of_wind \tab v10 \tab m/s \cr
    mean_total_precipitation_rate \tab mtpr \tab kg m**-2 s**-1 \cr
-   total_precipitation \tab ?? \tab m \cr
+   total_precipitation \tab tp \tab m \cr
    total_cloud_cover \tab tcc \tab 0..1 \cr
    low_cloud_cover \tab lcc \tab 0..1 \cr
    medium_cloud_cover \tab mcc \tab 0..1 \cr
