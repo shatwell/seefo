@@ -24,22 +24,12 @@ and working with raw sensor data for common sensors in the department.
 ## Installation
 
 You can install the latest version of seefo from
-[gitlab](https://git.ufz.de/shatwell/seefo) with:
+[github](https://github.com/shatwell/seefo.git) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_gitlab(repo="shatwell/seefo", host="https://git.ufz.de/")
+devtools::install_github(repo="shatwell/seefo", host="https://github.com/")
 ```
-
-Alternatively, if you run into problems here, you can download the
-compressed file `seefo_x.x.x.xxxx.tar.gz` (`x`s refer to the current
-version number) and install with:
-
-``` r
-install.packages("path/to/package/file/on/your/computer/seefo_v.e.r.sion.tar.gz"", type='source')
-```
-
-Don't forget to use the correct package name.
 
 ## Overview
 
