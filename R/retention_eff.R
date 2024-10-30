@@ -144,7 +144,7 @@ retention_eff <- function(data, methods, start.year, end.year){
 #defining 3 functions that do the different calculations
 load.GAM <- function(hydrology, year, doy, discharge, concentration, GOF=TRUE){
   mydata <- data.frame(year= year, doy=doy, discharge=discharge, concentration=concentration)
-  myGAM <-  mgcv::gam(concentration ~ s(year, k=5)+s(doy, bs="cc")+s(discharge), data=mydata)
+  myGAM <-  mgcv::gam(concentration ~ s(year)+s(doy, bs="cc")+s(discharge), data=mydata)
   dev.expl <- summary(myGAM)$dev.expl
   if(GOF){print(dev.expl)}
   predicted <- data.frame(times = hydrology$times,
