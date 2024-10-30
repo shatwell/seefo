@@ -14,11 +14,11 @@
 #' variable is a character vector with nutrient's name;
 #' value is a numeric vector with the observed concentrations in mg/l and the discharge in m3/s;
 #' in_outlet is a character vector naming "inflow" or "outflow";
-#' tributary is a character vector naming the pre-dams.
+#' tributary is a character vector naming the water body (pre-dams, lake or the reservoir).
 #'
 #'
 #' @return A list containing 2 dataframes: annual load and retention efficiency
-#' @author Karsten Rinke, Taynara Fernandes and Tom Shatwell
+#' @author Taynara Fernandes, Karsten Rinke and Tom Shatwell
 #'
 #' @examples
 #' #Load it as binary data for the example
