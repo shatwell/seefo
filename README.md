@@ -137,8 +137,15 @@ head(out)
 
 ### Calculating lake nutrient retention
 
-The function `retention_eff()` calculates nutrient retention in lakes.
+The function `retention_eff()` calculates nutrient retention in lakes, reservoirs or pre-dams.
 There's more to come, as it's under development.
+
+``` r
+data(ret_eff_data)
+out <- strat_phenology(ret_eff_data, start.year=2000, end.year=2019,
+  methods=c("method1","method2","GAM.load"))
+head(out)
+```
 
 ### Calculating stratification information
 
